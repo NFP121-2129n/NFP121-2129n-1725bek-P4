@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
-import java.io.*;
 
 import views.*;
 
@@ -86,6 +84,6 @@ public class App implements ActionListener {
     }
 
     public static void main(String[] args) {
-        App app = new App();
+        new App();
     }
 }

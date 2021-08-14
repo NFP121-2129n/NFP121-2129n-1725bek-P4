@@ -3,9 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
 
 public class MatiereView implements ActionListener {
 
