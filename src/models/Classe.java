@@ -13,12 +13,12 @@ public class Classe {
     private double debut;
     private double fin;
 
-    public Classe(String code, int capacite, Matiere matiere, String campus) {
+    public Classe(int capacite, Matiere matiere, String campus) {
         this.id = counter++;
-        this.code = code;
         this.capacite = capacite;
         this.matiere = matiere;
         this.campus = campus;
+        setCode();
     }
 
     // * Getters
@@ -91,8 +91,8 @@ public class Classe {
         this.capacite = capacite;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCode() {
+        this.code = matiere.getCode() + "-" + campus;
     }
 
     public void setId(int id) {
@@ -104,6 +104,6 @@ public class Classe {
     }
 
     public String toString() {
-        return "Classe " + getCode() + " : " + getMatiere() + "(cap : " + getCapacite() + ")";
+        return getCode() + " : " + "(cap : " + getCapacite() + ")";
     }
 }

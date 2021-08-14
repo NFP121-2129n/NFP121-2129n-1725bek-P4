@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import main.App;
 import models.Salle;
 
-public class SalleView implements ActionListener {
+public class SalleView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
     JPanel pLeft, pRight, pInput1, pInput2, pInput3;
@@ -46,7 +48,7 @@ public class SalleView implements ActionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(6, 1));
+        pLeft.setLayout(new GridLayout(9, 1));
         pInput1 = new JPanel();
         pInput1.add(labelCode);
         pInput1.add(tfCode);
@@ -72,6 +74,7 @@ public class SalleView implements ActionListener {
         }
         list = new JList<Salle>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
         TitledBorder listBorder = new TitledBorder(null, "Salles");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
@@ -100,13 +103,41 @@ public class SalleView implements ActionListener {
                 JOptionPane.showMessageDialog(null, "La capacité doit être un entier.");
                 return;
             }
-            Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
-                    Integer.parseInt(tfCapacity.getText()));
-            App.listSal.add(sal);
+            if (list.getSelectedValue() == null) {
+                Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
+                        Integer.parseInt(tfCapacity.getText()));
+                App.listSal.add(sal);
+            } else {
+                for (Salle sal : App.listSal) {
+                    if (sal.getId() == list.getSelectedValue().getId()) {
+                        sal.setCampus((String) cbCampus.getSelectedItem());
+                        sal.setCode(tfCode.getText());
+                        sal.setCapacite(Integer.parseInt(tfCapacity.getText()));
+                        break;
+                    }
+                }
+            }
             App.panel = new SalleView().mainPanel;
             App.frame.setContentPane(App.panel);
             App.frame.revalidate();
             App.frame.repaint();
+        }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() == list) {
+            if (list.getSelectedValue() == null) {
+                btnSubmit.setText("Enregistrer");
+                tfCapacity.setText("");
+                tfCode.setText("");
+                cbCampus.setSelectedIndex(0);
+                return;
+            }
+            btnSubmit.setText("Mettre à jour");
+            tfCapacity.setText(list.getSelectedValue().getCapacite() + "");
+            tfCode.setText(list.getSelectedValue().getCode());
+            cbCampus.setSelectedItem(list.getSelectedValue().getCampus());
         }
     }
 }

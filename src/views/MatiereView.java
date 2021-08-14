@@ -4,18 +4,19 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import main.App;
 import models.Matiere;
 
-public class MatiereView implements ActionListener {
+public class MatiereView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
-    JPanel pLeft, pRight, pInput1, pInput2;
+    JPanel pLeft, pRight, pInput1;
     JLabel pageTitle, labelCode, labelCampus;
     JTextField tfCode;
     JButton btnSubmit;
-    JComboBox<String> cbCampus;
     JList<Matiere> list;
     DefaultListModel<Matiere> listModel;
 
@@ -29,31 +30,19 @@ public class MatiereView implements ActionListener {
         // * Labels
         pageTitle = new JLabel("Entrer les infos matières :");
         labelCode = new JLabel("Code :");
-        labelCampus = new JLabel("Campus :");
         // * Input Fields
         tfCode = new JTextField(20);
-        cbCampus = new JComboBox<String>();
-        if (!App.listCampus.isEmpty()) {
-            App.listCampus.forEach((c) -> {
-                cbCampus.addItem(c);
-            });
-        }
-        cbCampus.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(6, 1));
+        pLeft.setLayout(new GridLayout(9, 1));
         pInput1 = new JPanel();
         pInput1.add(labelCode);
         pInput1.add(tfCode);
-        pInput2 = new JPanel();
-        pInput2.add(labelCampus);
-        pInput2.add(cbCampus);
         pLeft.add(pageTitle);
         pLeft.add(pInput1);
-        pLeft.add(pInput2);
         pLeft.add(btnSubmit);
         // * List
         pRight = new JPanel();
@@ -66,6 +55,7 @@ public class MatiereView implements ActionListener {
         }
         list = new JList<Matiere>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
         TitledBorder listBorder = new TitledBorder(null, "Matières");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
@@ -82,12 +72,35 @@ public class MatiereView implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette matière.");
                 return;
             }
-            Matiere mat = new Matiere(tfCode.getText(), (String) cbCampus.getSelectedItem());
-            App.listMat.add(mat);
+            if (list.getSelectedValue() == null) {
+                Matiere mat = new Matiere(tfCode.getText());
+                App.listMat.add(mat);
+            } else {
+                for (Matiere mat : App.listMat) {
+                    if (mat.getId() == list.getSelectedValue().getId()) {
+                        mat.setCode(tfCode.getText());
+                        break;
+                    }
+                }
+            }
             App.panel = new MatiereView().mainPanel;
             App.frame.setContentPane(App.panel);
             App.frame.revalidate();
             App.frame.repaint();
         }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() == list) {
+            if (list.getSelectedValue() == null) {
+                btnSubmit.setText("Enregistrer");
+                tfCode.setText("");
+                return;
+            }
+            btnSubmit.setText("Mettre à jour");
+            tfCode.setText(list.getSelectedValue().getCode());
+        }
+
     }
 }

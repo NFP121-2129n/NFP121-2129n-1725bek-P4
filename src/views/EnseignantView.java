@@ -37,7 +37,7 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(6, 1));
+        pLeft.setLayout(new GridLayout(9, 1));
         pInput = new JPanel();
         pInput.add(labelNom);
         pInput.add(tfNom);
@@ -72,8 +72,17 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
                 JOptionPane.showMessageDialog(null, "Veuillez entrer le nom de cet enseignant.");
                 return;
             }
-            Enseignant ens = new Enseignant(tfNom.getText());
-            App.listEns.add(ens);
+            if (list.getSelectedValue() == null) {
+                Enseignant ens = new Enseignant(tfNom.getText());
+                App.listEns.add(ens);
+            } else {
+                for (Enseignant ens : App.listEns) {
+                    if (ens.getId() == list.getSelectedValue().getId()) {
+                        ens.setNom(tfNom.getText());
+                        break;
+                    }
+                }
+            }
             App.panel = new EnseignantView().mainPanel;
             App.frame.setContentPane(App.panel);
             App.frame.revalidate();
@@ -84,8 +93,13 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list) {
-
+            if (list.getSelectedValue() == null) {
+                btnSubmit.setText("Enregistrer");
+                tfNom.setText("");
+                return;
+            }
+            btnSubmit.setText("Mettre à jour");
+            tfNom.setText(list.getSelectedValue().getNom());
         }
-
     }
 }

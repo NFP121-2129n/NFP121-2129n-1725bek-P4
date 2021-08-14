@@ -4,18 +4,19 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.util.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import main.App;
 import models.Classe;
 import models.Matiere;
 
-public class ClasseView implements ActionListener {
+public class ClasseView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
-    JPanel pLeft, pRight, pInput1, pInput2, pInput3, pInput4;
-    JLabel pageTitle, labelCode, labelQty, labelMatiere, labelCampus;
-    JTextField tfCode, tfCapacity;
+    JPanel pLeft, pRight, pInput2, pInput3, pInput4;
+    JLabel pageTitle, labelQty, labelMatiere, labelCampus;
+    JTextField tfCapacity;
     JButton btnSubmit;
     JComboBox<String> cbCampus;
     JComboBox<Matiere> cbMatiere;
@@ -31,12 +32,10 @@ public class ClasseView implements ActionListener {
         mainPanel.setLayout(new GridLayout(1, 2));
         // * Labels
         pageTitle = new JLabel("Entrer les infos classes :");
-        labelCode = new JLabel("Code :");
         labelQty = new JLabel("Quantité :");
         labelMatiere = new JLabel("Matière :");
         labelCampus = new JLabel("Campus :");
         // * Input Fields
-        tfCode = new JTextField(20);
         tfCapacity = new JTextField(20);
         cbCampus = new JComboBox<String>();
         if (!App.listCampus.isEmpty()) {
@@ -47,17 +46,20 @@ public class ClasseView implements ActionListener {
         cbCampus.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
         cbCampus.addActionListener(this);
         cbMatiere = new JComboBox<Matiere>();
-        populateListMat();
-        cbMatiere.setPrototypeDisplayValue(new Matiere("XXXXXXXXXX", "XXXXXXXXXX"));
+        if (!App.listMat.isEmpty()) {
+            App.listMat.forEach((c) -> {
+                cbMatiere.addItem(c);
+            });
+        } else {
+            cbMatiere.setEnabled(false);
+        }
+        cbMatiere.setPrototypeDisplayValue(new Matiere("XXXXXXXXXXXXXXXXXXXX"));
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(6, 1));
-        pInput1 = new JPanel();
-        pInput1.add(labelCode);
-        pInput1.add(tfCode);
+        pLeft.setLayout(new GridLayout(9, 1));
         pInput2 = new JPanel();
         pInput2.add(labelQty);
         pInput2.add(tfCapacity);
@@ -68,7 +70,6 @@ public class ClasseView implements ActionListener {
         pInput4.add(labelMatiere);
         pInput4.add(cbMatiere);
         pLeft.add(pageTitle);
-        pLeft.add(pInput1);
         pLeft.add(pInput2);
         pLeft.add(pInput3);
         pLeft.add(pInput4);
@@ -84,6 +85,7 @@ public class ClasseView implements ActionListener {
         }
         list = new JList<Classe>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
         TitledBorder listBorder = new TitledBorder(null, "Classes");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
@@ -100,14 +102,8 @@ public class ClasseView implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Veuillez choisir une matiere pour enregistrer cette classe.");
                 return;
             }
-            if (tfCode.getText().isEmpty() || tfCapacity.getText().isEmpty()) {
-                if (!tfCapacity.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
-                } else if (!tfCode.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Veuillez entrer la capacité de cette classe.");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code et la capacité de cette classe.");
-                }
+            if (tfCapacity.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
                 return;
             }
             try {
@@ -116,32 +112,46 @@ public class ClasseView implements ActionListener {
                 JOptionPane.showMessageDialog(null, "La capacité doit être un entier.");
                 return;
             }
-            Classe cla = new Classe(tfCode.getText(), Integer.parseInt(tfCapacity.getText()),
-                    (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
-            App.listCla.add(cla);
+
+            if (list.getSelectedValue() == null) {
+                Classe cla = new Classe(Integer.parseInt(tfCapacity.getText()), (Matiere) cbMatiere.getSelectedItem(),
+                        (String) cbCampus.getSelectedItem());
+                App.listCla.add(cla);
+            } else {
+                for (Classe cla : App.listCla) {
+                    if (cla.getId() == list.getSelectedValue().getId()) {
+                        cla.setCampus((String) cbCampus.getSelectedItem());
+                        cla.setMatiere((Matiere) cbMatiere.getSelectedItem());
+                        cla.setCapacite(Integer.parseInt(tfCapacity.getText()));
+                        cla.setCode();
+                        break;
+                    }
+                }
+            }
             App.panel = new ClasseView().mainPanel;
             App.frame.setContentPane(App.panel);
             App.frame.revalidate();
             App.frame.repaint();
         }
-        if (e.getSource() == cbCampus) {
-            populateListMat();
-        }
     }
 
-    public void populateListMat() {
-        cbMatiere.setEnabled(false);
-        if (!App.listMat.isEmpty()) {
-            cbMatiere.removeAllItems();
-            ArrayList<Matiere> tempListMat = Matiere.getByCampus((String) cbCampus.getSelectedItem());
-            tempListMat.forEach((m) -> {
-                cbMatiere.addItem(m);
-            });
-            if (!tempListMat.isEmpty()) {
-                cbMatiere.setEnabled(true);
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() == list) {
+            if (list.getSelectedValue() == null) {
+                btnSubmit.setText("Enregistrer");
+                cbCampus.setSelectedIndex(0);
+                if (cbMatiere.getItemCount() > 0)
+                    cbMatiere.setSelectedIndex(0);
+                else
+                    cbMatiere.setSelectedIndex(-1);
+                tfCapacity.setText("");
+                return;
             }
-            mainPanel.revalidate();
-            mainPanel.repaint();
+            btnSubmit.setText("Mettre à jour");
+            tfCapacity.setText(list.getSelectedValue().getCapacite() + "");
+            cbMatiere.setSelectedItem(list.getSelectedValue().getMatiere());
+            cbCampus.setSelectedItem(list.getSelectedValue().getCampus());
         }
     }
 }

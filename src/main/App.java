@@ -33,7 +33,7 @@ public class App implements ActionListener {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
         frame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 300,
                 (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - 200);
-        frame.setPreferredSize(new Dimension(600, 400));
+        frame.setPreferredSize(new Dimension(700, 500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
         mBar = new JMenuBar();
@@ -102,14 +102,14 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
-        // if (o == iHor) {
-        // if (panel.isShowing()) {
-        // frame.remove(panel);
-        // }
-        // panel = new HoraireView().mainPanel;
-        // frame.setContentPane(panel);
-        // frame.pack();
-        // }
+        if (o == iHor) {
+            if (panel.isShowing()) {
+                frame.remove(panel);
+            }
+            panel = new HoraireView().mainPanel;
+            frame.setContentPane(panel);
+            frame.pack();
+        }
     }
 
     public static void main(String[] args) {
