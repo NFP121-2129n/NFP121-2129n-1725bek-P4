@@ -28,13 +28,13 @@ public class HoraireView implements ActionListener {
     ArrayList<String> days = new ArrayList<String>(List.of("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"));
     Map<String, Integer> timeMap = new LinkedHashMap<String, Integer>() {
         {
-            put("3h00", 15);
-            put("4h00", 16);
-            put("5h00", 17);
-            put("6h00", 18);
-            put("7h00", 19);
-            put("8h00", 20);
-            put("9h00", 21);
+            put("15h00", 15);
+            put("16h00", 16);
+            put("17h00", 17);
+            put("18h00", 18);
+            put("19h00", 19);
+            put("20h00", 20);
+            put("21h00", 21);
         }
     };
 
@@ -59,13 +59,17 @@ public class HoraireView implements ActionListener {
             App.listCla.forEach((v) -> {
                 cbCla.addItem(v);
             });
+        } else {
+            cbCla.setEnabled(false);
         }
-        cbCla.setPrototypeDisplayValue(new Classe(0, new Matiere(""), "XXXXX"));
+        cbCla.setPrototypeDisplayValue(new Classe(0, new Matiere(""), "XXXXXXXXXXXXXXX"));
         cbEns = new JComboBox<Enseignant>();
         if (!App.listEns.isEmpty()) {
             App.listEns.forEach((v) -> {
                 cbEns.addItem(v);
             });
+        } else {
+            cbEns.setEnabled(false);
         }
         cbEns.setPrototypeDisplayValue(new Enseignant("XXXXX"));
         cbSal = new JComboBox<Salle>();
@@ -73,6 +77,8 @@ public class HoraireView implements ActionListener {
             App.listSal.forEach((v) -> {
                 cbSal.addItem(v);
             });
+        } else {
+            cbSal.setEnabled(false);
         }
         cbSal.setPrototypeDisplayValue(new Salle("XXX", "XXX", 0));
         cbDay = new JComboBox<String>();
@@ -134,7 +140,8 @@ public class HoraireView implements ActionListener {
         listModel = new DefaultListModel<Classe>();
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
-                listModel.addElement(v);
+                if (v.isCoupled())
+                    listModel.addElement(v);
             });
         }
         list = new JList<Classe>(listModel);
@@ -154,6 +161,25 @@ public class HoraireView implements ActionListener {
         if (o == cbStart) {
             populateEndTime();
         }
+        if (o == btnSubmit) {
+            if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
+                    || cbEnd.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
+                return;
+            }
+            Classe cla = (Classe) cbCla.getSelectedItem();
+            cla.setEnseignant((Enseignant) cbEns.getSelectedItem());
+            cla.setSalle((Salle) cbSal.getSelectedItem());
+            cla.setJour((String) cbDay.getSelectedItem());
+            cla.setDebut(timeMap.get(((String) cbStart.getSelectedItem())));
+            cla.setFin(timeMap.get(((String) cbEnd.getSelectedItem())));
+            cla.setCoupled();
+            App.panel = new HoraireView().mainPanel;
+            App.frame.setContentPane(App.panel);
+            App.frame.revalidate();
+            App.frame.repaint();
+        }
+
     }
 
     public void populateEndTime() {

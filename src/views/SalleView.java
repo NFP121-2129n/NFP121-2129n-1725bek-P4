@@ -108,14 +108,10 @@ public class SalleView implements ActionListener, ListSelectionListener {
                         Integer.parseInt(tfCapacity.getText()));
                 App.listSal.add(sal);
             } else {
-                for (Salle sal : App.listSal) {
-                    if (sal.getId() == list.getSelectedValue().getId()) {
-                        sal.setCampus((String) cbCampus.getSelectedItem());
-                        sal.setCode(tfCode.getText());
-                        sal.setCapacite(Integer.parseInt(tfCapacity.getText()));
-                        break;
-                    }
-                }
+                Salle sal = list.getSelectedValue();
+                sal.setCampus((String) cbCampus.getSelectedItem());
+                sal.setCode(tfCode.getText());
+                sal.setCapacite(Integer.parseInt(tfCapacity.getText()));
             }
             App.panel = new SalleView().mainPanel;
             App.frame.setContentPane(App.panel);

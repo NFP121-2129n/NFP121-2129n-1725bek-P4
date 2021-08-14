@@ -10,23 +10,29 @@ public class Classe {
     private Salle salle;
     private Enseignant enseignant;
     private String jour;
-    private double debut;
-    private double fin;
+    private int debut;
+    private int fin;
+    private boolean coupled;
 
     public Classe(int capacite, Matiere matiere, String campus) {
         this.id = counter++;
         this.capacite = capacite;
         this.matiere = matiere;
         this.campus = campus;
+        this.coupled = false;
         setCode();
     }
 
     // * Getters
-    public double getFin() {
+    public boolean isCoupled() {
+        return coupled;
+    }
+
+    public int getFin() {
         return fin;
     }
 
-    public double getDebut() {
+    public int getDebut() {
         return debut;
     }
 
@@ -63,11 +69,11 @@ public class Classe {
     }
 
     // * Setters
-    public void setFin(double fin) {
+    public void setFin(int fin) {
         this.fin = fin;
     }
 
-    public void setDebut(double debut) {
+    public void setDebut(int debut) {
         this.debut = debut;
     }
 
@@ -104,6 +110,14 @@ public class Classe {
     }
 
     public String toString() {
+        if (isCoupled()) {
+            return getCode() + ", " + getSalle().getCode() + " avec " + getEnseignant().getNom() + " : " + getJour()
+                    + " " + getDebut() + "h00-" + getFin() + "h00";
+        }
         return getCode() + " : " + "(cap : " + getCapacite() + ")";
+    }
+
+    public void setCoupled() {
+        this.coupled = true;
     }
 }

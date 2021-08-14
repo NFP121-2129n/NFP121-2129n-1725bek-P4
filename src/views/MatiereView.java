@@ -76,12 +76,8 @@ public class MatiereView implements ActionListener, ListSelectionListener {
                 Matiere mat = new Matiere(tfCode.getText());
                 App.listMat.add(mat);
             } else {
-                for (Matiere mat : App.listMat) {
-                    if (mat.getId() == list.getSelectedValue().getId()) {
-                        mat.setCode(tfCode.getText());
-                        break;
-                    }
-                }
+                Matiere mat = list.getSelectedValue();
+                mat.setCode(tfCode.getText());
             }
             App.panel = new MatiereView().mainPanel;
             App.frame.setContentPane(App.panel);

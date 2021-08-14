@@ -76,12 +76,8 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
                 Enseignant ens = new Enseignant(tfNom.getText());
                 App.listEns.add(ens);
             } else {
-                for (Enseignant ens : App.listEns) {
-                    if (ens.getId() == list.getSelectedValue().getId()) {
-                        ens.setNom(tfNom.getText());
-                        break;
-                    }
-                }
+                Enseignant ens = list.getSelectedValue();
+                ens.setNom(tfNom.getText());
             }
             App.panel = new EnseignantView().mainPanel;
             App.frame.setContentPane(App.panel);

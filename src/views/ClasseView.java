@@ -118,15 +118,11 @@ public class ClasseView implements ActionListener, ListSelectionListener {
                         (String) cbCampus.getSelectedItem());
                 App.listCla.add(cla);
             } else {
-                for (Classe cla : App.listCla) {
-                    if (cla.getId() == list.getSelectedValue().getId()) {
-                        cla.setCampus((String) cbCampus.getSelectedItem());
-                        cla.setMatiere((Matiere) cbMatiere.getSelectedItem());
-                        cla.setCapacite(Integer.parseInt(tfCapacity.getText()));
-                        cla.setCode();
-                        break;
-                    }
-                }
+                Classe cla = list.getSelectedValue();
+                cla.setCampus((String) cbCampus.getSelectedItem());
+                cla.setMatiere((Matiere) cbMatiere.getSelectedItem());
+                cla.setCapacite(Integer.parseInt(tfCapacity.getText()));
+                cla.setCode();
             }
             App.panel = new ClasseView().mainPanel;
             App.frame.setContentPane(App.panel);
