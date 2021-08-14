@@ -4,6 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.util.*;
+
+import main.App;
+import models.Classe;
+import models.Matiere;
 
 public class ClasseView implements ActionListener {
 
@@ -12,9 +17,10 @@ public class ClasseView implements ActionListener {
     JLabel pageTitle, labelCode, labelQty, labelMatiere, labelCampus;
     JTextField tfCode, tfQty;
     JButton btnSubmit;
-    JComboBox<String> cbCampus, cbMatiere;
-    JList<String> list;
-    DefaultListModel<String> listModel;
+    JComboBox<String> cbCampus;
+    JComboBox<Matiere> cbMatiere;
+    JList<Classe> list;
+    DefaultListModel<Classe> listModel;
 
     public ClasseView() {
         mainPanel = new JPanel();
@@ -33,13 +39,16 @@ public class ClasseView implements ActionListener {
         tfCode = new JTextField(20);
         tfQty = new JTextField(20);
         cbCampus = new JComboBox<String>();
-        cbCampus.addItem("Bikfaya");
-        cbCampus.addItem("Nahr Ibrahim");
+        if (!App.listCampus.isEmpty()) {
+            App.listCampus.forEach((c) -> {
+                cbCampus.addItem(c);
+            });
+        }
         cbCampus.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
-        // TODO fill ComboBox with Matière objects
-        cbMatiere = new JComboBox<String>();
-        cbMatiere.setEnabled(false);
-        cbMatiere.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
+        cbCampus.addActionListener(this);
+        cbMatiere = new JComboBox<Matiere>();
+        populateListMat();
+        cbMatiere.setPrototypeDisplayValue(new Matiere("XXXXXXXXXX", "XXXXXXXXXX"));
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
         btnSubmit.addActionListener(this);
@@ -67,23 +76,15 @@ public class ClasseView implements ActionListener {
         // * List
         pRight = new JPanel();
         pRight.setLayout(new BorderLayout(10, 10));
-        listModel = new DefaultListModel<String>();
-        // if (compte.equals("Client")) {
-        // if (!MainInterface.listCli.isEmpty()) {
-        // MainInterface.listCli.forEach((c) -> {
-        // listModel.addElement(c);
-        // });
-        // }
-        // } else {
-        // if (!MainInterface.listFou.isEmpty()) {
-        // MainInterface.listFou.forEach((f) -> {
-        // listModel.addElement(f);
-        // });
-        // }
-        // }
-        list = new JList<String>();
+        listModel = new DefaultListModel<Classe>();
+        if (!App.listCla.isEmpty()) {
+            App.listCla.forEach((c) -> {
+                listModel.addElement(c);
+            });
+        }
+        list = new JList<Classe>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        TitledBorder listBorder = new TitledBorder(null, "Enseignants");
+        TitledBorder listBorder = new TitledBorder(null, "Classes");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
         pRight.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -94,6 +95,33 @@ public class ClasseView implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnSubmit) {
+            Classe cla = new Classe(tfCode.getText(), Integer.parseInt(tfQty.getText()),
+                    (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
+            App.listCla.add(cla);
+            App.panel = new ClasseView().mainPanel;
+            App.frame.setContentPane(App.panel);
+            App.frame.revalidate();
+            App.frame.repaint();
+        }
+        if (e.getSource() == cbCampus) {
+            populateListMat();
+        }
+    }
 
+    public void populateListMat() {
+        cbMatiere.setEnabled(false);
+        if (!App.listMat.isEmpty()) {
+            cbMatiere.removeAllItems();
+            ArrayList<Matiere> tempListMat = Matiere.getByCampus((String) cbCampus.getSelectedItem());
+            tempListMat.forEach((m) -> {
+                cbMatiere.addItem(m);
+            });
+            if (!tempListMat.isEmpty()) {
+                cbMatiere.setEnabled(true);
+            }
+            mainPanel.revalidate();
+            mainPanel.repaint();
+        }
     }
 }

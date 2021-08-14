@@ -1,5 +1,7 @@
 package views;
 
+import main.App;
+import models.Matiere;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,8 +15,8 @@ public class MatiereView implements ActionListener {
     JTextField tfCode;
     JButton btnSubmit;
     JComboBox<String> cbCampus;
-    JList<String> list;
-    DefaultListModel<String> listModel;
+    JList<Matiere> list;
+    DefaultListModel<Matiere> listModel;
 
     public MatiereView() {
         mainPanel = new JPanel();
@@ -30,8 +32,11 @@ public class MatiereView implements ActionListener {
         // * Input Fields
         tfCode = new JTextField(20);
         cbCampus = new JComboBox<String>();
-        cbCampus.addItem("Bikfaya");
-        cbCampus.addItem("Nahr Ibrahim");
+        if (!App.listCampus.isEmpty()) {
+            App.listCampus.forEach((c) -> {
+                cbCampus.addItem(c);
+            });
+        }
         cbCampus.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
@@ -52,23 +57,15 @@ public class MatiereView implements ActionListener {
         // * List
         pRight = new JPanel();
         pRight.setLayout(new BorderLayout(10, 10));
-        listModel = new DefaultListModel<String>();
-        // if (compte.equals("Client")) {
-        // if (!MainInterface.listCli.isEmpty()) {
-        // MainInterface.listCli.forEach((c) -> {
-        // listModel.addElement(c);
-        // });
-        // }
-        // } else {
-        // if (!MainInterface.listFou.isEmpty()) {
-        // MainInterface.listFou.forEach((f) -> {
-        // listModel.addElement(f);
-        // });
-        // }
-        // }
-        list = new JList<String>();
+        listModel = new DefaultListModel<Matiere>();
+        if (!App.listMat.isEmpty()) {
+            App.listMat.forEach((c) -> {
+                listModel.addElement(c);
+            });
+        }
+        list = new JList<Matiere>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        TitledBorder listBorder = new TitledBorder(null, "Enseignants");
+        TitledBorder listBorder = new TitledBorder(null, "Matières");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
         pRight.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -79,6 +76,13 @@ public class MatiereView implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == btnSubmit) {
+            Matiere mat = new Matiere(tfCode.getText(), (String) cbCampus.getSelectedItem());
+            App.listMat.add(mat);
+            App.panel = new MatiereView().mainPanel;
+            App.frame.setContentPane(App.panel);
+            App.frame.revalidate();
+            App.frame.repaint();
+        }
     }
 }

@@ -3,12 +3,12 @@ package models;
 public class Classe {
     private static int counter = 1;
     private int id;
-    private int code;
+    private String code;
     private int capacite;
-    private String matiere;
+    private Matiere matiere;
     private String campus;
 
-    public Classe(int code, int capacite, String matiere, String campus) {
+    public Classe(String code, int capacite, Matiere matiere, String campus) {
         this.id = counter++;
         this.code = code;
         this.capacite = capacite;
@@ -25,7 +25,7 @@ public class Classe {
         return capacite;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -33,7 +33,7 @@ public class Classe {
         return id;
     }
 
-    public String getMatiere() {
+    public Matiere getMatiere() {
         return matiere;
     }
 
@@ -46,7 +46,7 @@ public class Classe {
         this.capacite = capacite;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -54,7 +54,11 @@ public class Classe {
         this.id = id;
     }
 
-    public void setMatiere(String matiere) {
+    public void setMatiere(Matiere matiere) {
         this.matiere = matiere;
+    }
+
+    public String toString() {
+        return "Classe " + getCode() + " : " + getMatiere() + "(cap : " + getCapacite() + ")";
     }
 }

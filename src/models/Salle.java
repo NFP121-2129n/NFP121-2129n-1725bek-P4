@@ -3,13 +3,13 @@ package models;
 public class Salle {
     private static int counter = 1;
     private int id;
-    private String name;
+    private String code;
     private String campus;
     private int capacite;
 
-    public Salle(String name, String campus, int capacite) {
+    public Salle(String code, String campus, int capacite) {
         this.id = counter++;
-        this.name = name;
+        this.code = code;
         this.campus = campus;
         this.capacite = capacite;
     }
@@ -23,8 +23,8 @@ public class Salle {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
     public String getCampus() {
@@ -40,11 +40,11 @@ public class Salle {
         this.capacite = capacite;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String toString() {
+        return "Salle " + getCode() + ", " + getCampus() + " (Capacité: " + getCapacite() + ")";
     }
 }

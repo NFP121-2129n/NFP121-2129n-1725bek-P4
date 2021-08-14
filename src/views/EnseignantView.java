@@ -1,9 +1,11 @@
 package views;
 
+import models.Enseignant;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import main.App;
 
 public class EnseignantView implements ActionListener {
 
@@ -12,8 +14,8 @@ public class EnseignantView implements ActionListener {
     JLabel pageTitle, labelNom;
     JTextField tfNom;
     JButton btnSubmit;
-    JList<String> list;
-    DefaultListModel<String> listModel;
+    JList<Enseignant> list;
+    DefaultListModel<Enseignant> listModel;
 
     public EnseignantView() {
         mainPanel = new JPanel();
@@ -42,21 +44,13 @@ public class EnseignantView implements ActionListener {
         // * List
         pRight = new JPanel();
         pRight.setLayout(new BorderLayout(10, 10));
-        listModel = new DefaultListModel<String>();
-        // if (compte.equals("Client")) {
-        // if (!MainInterface.listCli.isEmpty()) {
-        // MainInterface.listCli.forEach((c) -> {
-        // listModel.addElement(c);
-        // });
-        // }
-        // } else {
-        // if (!MainInterface.listFou.isEmpty()) {
-        // MainInterface.listFou.forEach((f) -> {
-        // listModel.addElement(f);
-        // });
-        // }
-        // }
-        list = new JList<String>();
+        listModel = new DefaultListModel<Enseignant>();
+        if (!App.listEns.isEmpty()) {
+            App.listEns.forEach((c) -> {
+                listModel.addElement(c);
+            });
+        }
+        list = new JList<Enseignant>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TitledBorder listBorder = new TitledBorder(null, "Enseignants");
         listBorder.setTitleJustification(TitledBorder.CENTER);
@@ -69,6 +63,14 @@ public class EnseignantView implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == btnSubmit) {
+            Enseignant ens = new Enseignant(tfNom.getText());
+            App.listEns.add(ens);
+            App.panel = new EnseignantView().mainPanel;
+            App.frame.setContentPane(App.panel);
+            App.frame.revalidate();
+            App.frame.repaint();
+        }
     }
+
 }

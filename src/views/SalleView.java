@@ -1,5 +1,7 @@
 package views;
 
+import main.App;
+import models.Salle;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,9 +14,9 @@ public class SalleView implements ActionListener {
     JLabel pageTitle, labelCode, labelCapacity, labelCampus;
     JTextField tfCode, tfCapacity;
     JButton btnSubmit;
-    JComboBox<String> cbCampus, cbMatiere;
-    JList<String> list;
-    DefaultListModel<String> listModel;
+    JComboBox<String> cbCampus;
+    JList<Salle> list;
+    DefaultListModel<Salle> listModel;
 
     public SalleView() {
         mainPanel = new JPanel();
@@ -32,8 +34,11 @@ public class SalleView implements ActionListener {
         tfCode = new JTextField(20);
         tfCapacity = new JTextField(20);
         cbCampus = new JComboBox<String>();
-        cbCampus.addItem("Bikfaya");
-        cbCampus.addItem("Nahr Ibrahim");
+        if (!App.listCampus.isEmpty()) {
+            App.listCampus.forEach((c) -> {
+                cbCampus.addItem(c);
+            });
+        }
         cbCampus.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
@@ -58,23 +63,15 @@ public class SalleView implements ActionListener {
         // * List
         pRight = new JPanel();
         pRight.setLayout(new BorderLayout(10, 10));
-        listModel = new DefaultListModel<String>();
-        // if (compte.equals("Client")) {
-        // if (!MainInterface.listCli.isEmpty()) {
-        // MainInterface.listCli.forEach((c) -> {
-        // listModel.addElement(c);
-        // });
-        // }
-        // } else {
-        // if (!MainInterface.listFou.isEmpty()) {
-        // MainInterface.listFou.forEach((f) -> {
-        // listModel.addElement(f);
-        // });
-        // }
-        // }
-        list = new JList<String>();
+        listModel = new DefaultListModel<Salle>();
+        if (!App.listSal.isEmpty()) {
+            App.listSal.forEach((c) -> {
+                listModel.addElement(c);
+            });
+        }
+        list = new JList<Salle>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        TitledBorder listBorder = new TitledBorder(null, "Enseignants");
+        TitledBorder listBorder = new TitledBorder(null, "Salles");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
         pRight.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -85,6 +82,14 @@ public class SalleView implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == btnSubmit) {
+            Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
+                    Integer.parseInt(tfCapacity.getText()));
+            App.listSal.add(sal);
+            App.panel = new SalleView().mainPanel;
+            App.frame.setContentPane(App.panel);
+            App.frame.revalidate();
+            App.frame.repaint();
+        }
     }
 }

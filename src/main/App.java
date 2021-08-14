@@ -1,15 +1,29 @@
+package main;
+
 import java.awt.*;
+import java.util.List;
 import java.awt.event.*;
 import javax.swing.*;
 
+import models.Classe;
+import models.Enseignant;
+import models.Matiere;
+import models.Salle;
+
+import java.util.*;
 import views.*;
 
 public class App implements ActionListener {
 
-    static JFrame frame;
-    static JPanel panel;
+    public static JFrame frame;
+    public static JPanel panel;
     JMenuBar mBar;
     JMenuItem iEns, iCla, iSal, iMat, iHor;
+    public static ArrayList<Enseignant> listEns = new ArrayList<Enseignant>();
+    public static ArrayList<Classe> listCla = new ArrayList<Classe>();
+    public static ArrayList<Matiere> listMat = new ArrayList<Matiere>();
+    public static ArrayList<Salle> listSal = new ArrayList<Salle>();
+    public static ArrayList<String> listCampus;
 
     App() {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
@@ -36,6 +50,10 @@ public class App implements ActionListener {
         frame.pack();
         frame.setResizable(false);
         frame.setVisible(true);
+        // * Campus Array
+        listCampus = new ArrayList<String>(
+                List.of("Bikfaya", "Beyrouth", "Nahr Ibrahim", "Tripoli", "Bekaa", "Chtoura", "Baakline"));
+        Collections.sort(listCampus);
     }
 
     @Override

@@ -20,11 +20,11 @@ public class Enseignant {
     }
 
     // * Setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String toString() {
+        return "Enseignant no. " + getId() + " : " + getNom();
     }
 }
