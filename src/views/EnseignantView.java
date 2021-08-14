@@ -64,6 +64,10 @@ public class EnseignantView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            if (tfNom.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Veuillez entrer le nom de cet enseignant.");
+                return;
+            }
             Enseignant ens = new Enseignant(tfNom.getText());
             App.listEns.add(ens);
             App.panel = new EnseignantView().mainPanel;

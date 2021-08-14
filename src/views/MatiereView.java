@@ -77,6 +77,10 @@ public class MatiereView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            if (tfCode.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette matière.");
+                return;
+            }
             Matiere mat = new Matiere(tfCode.getText(), (String) cbCampus.getSelectedItem());
             App.listMat.add(mat);
             App.panel = new MatiereView().mainPanel;

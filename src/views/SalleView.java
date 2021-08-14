@@ -83,6 +83,16 @@ public class SalleView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            if (tfCode.getText().isEmpty() || tfCapacity.getText().isEmpty()) {
+                if (!tfCapacity.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
+                } else if (!tfCode.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer la capacité de cette classe.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code et la capacité de cette classe.");
+                }
+                return;
+            }
             Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
                     Integer.parseInt(tfCapacity.getText()));
             App.listSal.add(sal);

@@ -17,16 +17,22 @@ public class App implements ActionListener {
 
     public static JFrame frame;
     public static JPanel panel;
+
     JMenuBar mBar;
     JMenuItem iEns, iCla, iSal, iMat, iHor;
+
     public static ArrayList<Enseignant> listEns = new ArrayList<Enseignant>();
     public static ArrayList<Classe> listCla = new ArrayList<Classe>();
     public static ArrayList<Matiere> listMat = new ArrayList<Matiere>();
     public static ArrayList<Salle> listSal = new ArrayList<Salle>();
     public static ArrayList<String> listCampus;
 
+    String currentPanel = "";
+
     App() {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
+        frame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 300,
+                (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - 200);
         frame.setPreferredSize(new Dimension(600, 400));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
@@ -58,7 +64,12 @@ public class App implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().toString().equals(currentPanel)) {
+            JOptionPane.showMessageDialog(null, "Vous êtes deja dans la section \"" + currentPanel + "\"");
+            return;
+        }
         Object o = e.getSource();
+        currentPanel = e.getActionCommand().toString();
         if (o == iEns) {
             if (panel.isShowing()) {
                 frame.remove(panel);

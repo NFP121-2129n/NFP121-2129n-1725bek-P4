@@ -15,7 +15,7 @@ public class ClasseView implements ActionListener {
     public JPanel mainPanel;
     JPanel pLeft, pRight, pInput1, pInput2, pInput3, pInput4;
     JLabel pageTitle, labelCode, labelQty, labelMatiere, labelCampus;
-    JTextField tfCode, tfQty;
+    JTextField tfCode, tfCapacity;
     JButton btnSubmit;
     JComboBox<String> cbCampus;
     JComboBox<Matiere> cbMatiere;
@@ -37,7 +37,7 @@ public class ClasseView implements ActionListener {
         labelCampus = new JLabel("Campus :");
         // * Input Fields
         tfCode = new JTextField(20);
-        tfQty = new JTextField(20);
+        tfCapacity = new JTextField(20);
         cbCampus = new JComboBox<String>();
         if (!App.listCampus.isEmpty()) {
             App.listCampus.forEach((c) -> {
@@ -60,7 +60,7 @@ public class ClasseView implements ActionListener {
         pInput1.add(tfCode);
         pInput2 = new JPanel();
         pInput2.add(labelQty);
-        pInput2.add(tfQty);
+        pInput2.add(tfCapacity);
         pInput3 = new JPanel();
         pInput3.add(labelCampus);
         pInput3.add(cbCampus);
@@ -96,7 +96,21 @@ public class ClasseView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
-            Classe cla = new Classe(tfCode.getText(), Integer.parseInt(tfQty.getText()),
+            if (cbMatiere.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "Veuillez choisir une matiere pour enregistrer cette classe.");
+                return;
+            }
+            if (tfCode.getText().isEmpty() || tfCapacity.getText().isEmpty()) {
+                if (!tfCapacity.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
+                } else if (!tfCode.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer la capacité de cette classe.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer le code et la capacité de cette classe.");
+                }
+                return;
+            }
+            Classe cla = new Classe(tfCode.getText(), Integer.parseInt(tfCapacity.getText()),
                     (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
             App.listCla.add(cla);
             App.panel = new ClasseView().mainPanel;
