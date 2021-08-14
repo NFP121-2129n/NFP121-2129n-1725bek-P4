@@ -96,6 +96,7 @@ public class ClasseView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+
             if (cbMatiere.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(null, "Veuillez choisir une matiere pour enregistrer cette classe.");
                 return;
@@ -108,6 +109,12 @@ public class ClasseView implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(null, "Veuillez entrer le code et la capacité de cette classe.");
                 }
+                return;
+            }
+            try {
+                Integer.parseInt(tfCapacity.getText());
+            } catch (Exception exc) {
+                JOptionPane.showMessageDialog(null, "La capacité doit être un entier.");
                 return;
             }
             Classe cla = new Classe(tfCode.getText(), Integer.parseInt(tfCapacity.getText()),

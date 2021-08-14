@@ -93,6 +93,12 @@ public class SalleView implements ActionListener {
                 }
                 return;
             }
+            try {
+                Integer.parseInt(tfCapacity.getText());
+            } catch (Exception exc) {
+                JOptionPane.showMessageDialog(null, "La capacité doit être un entier.");
+                return;
+            }
             Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
                     Integer.parseInt(tfCapacity.getText()));
             App.listSal.add(sal);
