@@ -89,12 +89,9 @@ public class HoraireView implements ActionListener {
             });
         }
         cbStart.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
+        cbStart.addActionListener(this);
         cbEnd = new JComboBox<String>();
-        if (!timeMap.isEmpty()) {
-            timeMap.keySet().forEach((v) -> {
-                cbEnd.addItem(v);
-            });
-        }
+        populateEndTime();
         cbEnd.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXX");
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
@@ -154,11 +151,28 @@ public class HoraireView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o == btnSubmit) {
-
+        if (o == cbStart) {
+            populateEndTime();
         }
-        if (o == btnGenerate) {
+    }
 
+    public void populateEndTime() {
+        String timeStr = (String) cbStart.getSelectedItem();
+        Map<String, Integer> tempTimeMap = new LinkedHashMap<String, Integer>();
+        for (String timeKey : timeMap.keySet()) {
+            if (timeMap.get(timeKey) > timeMap.get(timeStr)) {
+                tempTimeMap.put(timeKey, timeMap.get(timeKey));
+            }
         }
+        cbEnd.setEnabled(false);
+        cbEnd.removeAllItems();
+        if (!tempTimeMap.isEmpty()) {
+            tempTimeMap.keySet().forEach((v) -> {
+                cbEnd.addItem(v);
+            });
+            cbEnd.setEnabled(true);
+        }
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 }
