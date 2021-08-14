@@ -1,11 +1,12 @@
 package views;
 
-import models.Enseignant;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
 import main.App;
+import models.Enseignant;
 
 public class EnseignantView implements ActionListener {
 
@@ -76,5 +77,4 @@ public class EnseignantView implements ActionListener {
             App.frame.repaint();
         }
     }
-
 }

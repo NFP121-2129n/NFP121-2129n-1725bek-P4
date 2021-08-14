@@ -1,11 +1,12 @@
 package views;
 
-import main.App;
-import models.Matiere;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import main.App;
+import models.Matiere;
 
 public class MatiereView implements ActionListener {
 

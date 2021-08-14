@@ -1,9 +1,0 @@
-"Horaire" => Memento (rollback, save states, etc...);
-"Enseignant, Classe, Matière, Salle" => Prototype (duplicate instance then edit);
-"Horaire" => Proxy (create "Horaire" only if admin);
-"Horaire, Enseignant, Classe, Matière, Salle" => Observer (edit "Horaire", restrictions on data entry inputs);
-"Horaire" => Command (on create "Horaire" execute a set of actions);
-"Horaire" => Builder (save instances in Builder and on create "Horaire" build immutable table and save states on edit in Memento);
-"Horaire" => Façade (if log in as student, only see horaire of student campus);
-"Matière" => FactoChainry (subclasses of courses);
-"Horaire" =>  Of Responsibility (use for logger at every action);
