@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.DefaultTableModel;
 
 import main.App;
 import models.Enseignant;
@@ -18,7 +19,7 @@ public class HoraireView implements ActionListener {
     public JPanel mainPanel;
     JPanel pLeft, pRight, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
     JLabel pageTitle, labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
-    JButton btnSubmit, btnGenerate;
+    JButton btnSubmit, btnSave;
     JComboBox<Classe> cbCla;
     JComboBox<Enseignant> cbEns;
     JComboBox<Salle> cbSal;
@@ -28,6 +29,8 @@ public class HoraireView implements ActionListener {
     ArrayList<String> days = new ArrayList<String>(List.of("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"));
     public static ArrayList<String> timeMap = new ArrayList<String>(
             List.of("13h00-14h45", "15h00-16h54", "17h00-18h45", "19h00-20h45"));
+    JTable table;
+    DefaultTableModel tableModel;
 
     public HoraireView() {
         mainPanel = new JPanel();
@@ -82,8 +85,8 @@ public class HoraireView implements ActionListener {
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
         btnSubmit.addActionListener(this);
-        btnGenerate = new JButton("Générer");
-        btnGenerate.addActionListener(this);
+        btnSave = new JButton("Sauvegarder");
+        btnSave.addActionListener(this);
         // * Form
         pLeft = new JPanel();
         pLeft.setLayout(new GridLayout(9, 1));
@@ -113,7 +116,7 @@ public class HoraireView implements ActionListener {
         pLeft.add(pInput4);
         pLeft.add(pInput5);
         pLeft.add(btnSubmit);
-        pLeft.add(btnGenerate);
+        pLeft.add(btnSave);
         // * List
         pRight = new JPanel();
         pRight.setLayout(new BorderLayout(10, 10));
@@ -130,6 +133,8 @@ public class HoraireView implements ActionListener {
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
         pRight.add(new JScrollPane(list), BorderLayout.CENTER);
+        // * Table
+
         // * Build View
         mainPanel.add(pLeft);
         mainPanel.add(pRight);
