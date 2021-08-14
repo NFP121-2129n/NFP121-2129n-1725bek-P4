@@ -10,8 +10,7 @@ public class Classe {
     private Salle salle;
     private Enseignant enseignant;
     private String jour;
-    private int debut;
-    private int fin;
+    private String periode;
     private boolean coupled;
 
     public Classe(int capacite, Matiere matiere, String campus) {
@@ -28,12 +27,8 @@ public class Classe {
         return coupled;
     }
 
-    public int getFin() {
-        return fin;
-    }
-
-    public int getDebut() {
-        return debut;
+    public String getPeriode() {
+        return periode;
     }
 
     public String getJour() {
@@ -69,12 +64,8 @@ public class Classe {
     }
 
     // * Setters
-    public void setFin(int fin) {
-        this.fin = fin;
-    }
-
-    public void setDebut(int debut) {
-        this.debut = debut;
+    public void setPeriode(String periode) {
+        this.periode = periode;
     }
 
     public void setJour(String jour) {
@@ -112,7 +103,7 @@ public class Classe {
     public String toString() {
         if (isCoupled()) {
             return getCode() + ", " + getSalle().getCode() + " avec " + getEnseignant().getNom() + " : " + getJour()
-                    + " " + getDebut() + "h00-" + getFin() + "h00";
+                    + " " + getPeriode();
         }
         return getCode() + " : " + "(cap : " + getCapacite() + ")";
     }
