@@ -7,6 +7,11 @@ public class Classe {
     private int capacite;
     private Matiere matiere;
     private String campus;
+    private Salle salle;
+    private Enseignant enseignant;
+    private String jour;
+    private double debut;
+    private double fin;
 
     public Classe(String code, int capacite, Matiere matiere, String campus) {
         this.id = counter++;
@@ -17,6 +22,26 @@ public class Classe {
     }
 
     // * Getters
+    public double getFin() {
+        return fin;
+    }
+
+    public double getDebut() {
+        return debut;
+    }
+
+    public String getJour() {
+        return jour;
+    }
+
+    public Enseignant getEnseignant() {
+        return enseignant;
+    }
+
+    public Salle getSalle() {
+        return salle;
+    }
+
     public String getCampus() {
         return campus;
     }
@@ -38,6 +63,26 @@ public class Classe {
     }
 
     // * Setters
+    public void setFin(double fin) {
+        this.fin = fin;
+    }
+
+    public void setDebut(double debut) {
+        this.debut = debut;
+    }
+
+    public void setJour(String jour) {
+        this.jour = jour;
+    }
+
+    public void setEnseignant(Enseignant enseignant) {
+        this.enseignant = enseignant;
+    }
+
+    public void setSalle(Salle salle) {
+        this.salle = salle;
+    }
+
     public void setCampus(String campus) {
         this.campus = campus;
     }

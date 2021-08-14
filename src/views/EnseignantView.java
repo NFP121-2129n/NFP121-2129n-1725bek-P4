@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import main.App;
 import models.Enseignant;
 
-public class EnseignantView implements ActionListener {
+public class EnseignantView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
     JPanel pLeft, pRight, pInput;
@@ -53,6 +55,7 @@ public class EnseignantView implements ActionListener {
         }
         list = new JList<Enseignant>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
         TitledBorder listBorder = new TitledBorder(null, "Enseignants");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
@@ -76,5 +79,13 @@ public class EnseignantView implements ActionListener {
             App.frame.revalidate();
             App.frame.repaint();
         }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource() == list) {
+
+        }
+
     }
 }
