@@ -51,6 +51,10 @@ public class ClasseCouple extends Classe {
         return periode;
     }
 
+    public String tableString() {
+        return getMatiere() + " " + getSalle().tableString();
+    }
+
     public String toString() {
         return getCode() + " " + getSalle() + " " + getEnseignant() + " " + getJour() + " " + getPeriode();
     }

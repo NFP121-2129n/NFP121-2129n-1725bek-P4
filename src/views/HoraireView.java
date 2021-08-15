@@ -18,8 +18,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
     JPanel pTop, pBottom, pLeft, pRight, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
-    JLabel pageTitle, labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
-    JButton btnSubmit, btnSave;
+    JLabel labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
+    JButton btnSubmit, btnRollback, btnSave;
     JComboBox<Classe> cbCla;
     JComboBox<Enseignant> cbEns;
     JComboBox<Salle> cbSal;
@@ -34,6 +34,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     String[] headers = days.toArray(new String[0]);
     public Horaire currentHoraire;
     ClasseFactory classeFactory = ClasseFactory.getInstance();
+    Caretaker currentCaretaker;
+    Originator currentOriginator;
 
     public HoraireView() {
         mainPanel = new JPanel();
@@ -43,7 +45,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         mainPanel.setBorder(title);
         mainPanel.setLayout(new GridLayout(2, 1));
         // * Labels
-        pageTitle = new JLabel("Entrer les couples infos :");
         labelCam = new JLabel("Choisir campus :");
         labelCla = new JLabel("Classe :");
         labelEns = new JLabel("Enseignant :");
@@ -100,6 +101,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         // * Buttons
         btnSubmit = new JButton("Enregistrer");
         btnSubmit.addActionListener(this);
+        btnRollback = new JButton("Fuck, go back!");
+        btnRollback.addActionListener(this);
         btnSave = new JButton("Sauvegarder");
         btnSave.addActionListener(this);
         // * Form
@@ -124,13 +127,13 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         pInput5.add(labelTime);
         pInput5.add(cbTime);
         pLeft.add(pInputCam);
-        pLeft.add(pageTitle);
         pLeft.add(pInput1);
         pLeft.add(pInput2);
         pLeft.add(pInput3);
         pLeft.add(pInput4);
         pLeft.add(pInput5);
         pLeft.add(btnSubmit);
+        pLeft.add(btnRollback);
         pLeft.add(btnSave);
         // * Table
         pBottom = new JPanel();
@@ -167,9 +170,22 @@ public class HoraireView implements ActionListener, ListSelectionListener {
             populateByCampus();
             populateHoraireTable();
         }
+        if (o == btnRollback) {
+            rollback();
+        }
         if (o == btnSave) {
             System.out.println("Save horaire instance");
         }
+    }
+
+    public void rollback() {
+        // TODO rollback states
+        System.out.println(currentHoraire.getHoraire());
+        currentOriginator.getStateFromMemento(currentCaretaker.rollBack());
+        currentHoraire = currentOriginator.getHoraire();
+        System.out.println(currentHoraire.getHoraire());
+        // populateHoraireTable();
+        // populateList();
     }
 
     public void enregistrer() {
@@ -195,6 +211,10 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         checkCellAvailabilty(cla, rowID, colID);
         populateHoraireTable();
         populateList();
+        // TODO save states
+        currentOriginator.setHoraire(currentHoraire);
+        currentCaretaker.add(currentOriginator.saveToMemento());
+        System.out.println(currentCaretaker.mementoStack.size());
     }
 
     public void checkCellAvailabilty(ClasseNonCouple cla, int rowID, int colID) {
@@ -215,6 +235,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
         ClasseCouple claCouple = coupleClasse(cla);
         currentHoraire.setTableCell(claCouple, rowID, colID);
+
     }
 
     public boolean isEnseignantAvailable(int rowID, int colID) {
@@ -249,13 +270,12 @@ public class HoraireView implements ActionListener, ListSelectionListener {
             for (Horaire hor : App.listHor) {
                 if (hor.getCampus().equals((String) cbCam.getSelectedItem())) {
                     currentHoraire = hor;
-
                     ArrayList<ClasseCouple>[][] horTable = hor.getHoraire();
                     for (int i = 0; i < horTable.length; i++) {
                         for (int j = 0; j < horTable[i].length; j++) {
                             if (horTable[i][j] != null) {
-                                tableModel.setValueAt(horTable[i][j].stream().map(Object::toString)
-                                        .collect(Collectors.joining("----------------------\n")), i, j);
+                                tableModel.setValueAt(horTable[i][j].stream().map(e -> e.tableString())
+                                        .collect(Collectors.joining(", ")), i, j);
                             }
                         }
                     }
@@ -263,6 +283,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
                 }
             }
         }
+        currentOriginator.setHoraire(currentHoraire);
+        currentCaretaker.add(currentOriginator.saveToMemento());
         table.setModel(tableModel);
         mainPanel.revalidate();
         mainPanel.repaint();
@@ -298,6 +320,20 @@ public class HoraireView implements ActionListener, ListSelectionListener {
             if (cbSal.getItemCount() > 0) {
                 cbSal.setEnabled(true);
             }
+        }
+        if (!App.listCaretaker.isEmpty()) {
+            App.listCaretaker.forEach((v) -> {
+                if (v.getCampus().equals((String) cbCam.getSelectedItem())) {
+                    currentCaretaker = v;
+                }
+            });
+        }
+        if (!App.listOriginator.isEmpty()) {
+            App.listOriginator.forEach((v) -> {
+                if (v.getCampus().equals((String) cbCam.getSelectedItem())) {
+                    currentOriginator = v;
+                }
+            });
         }
         mainPanel.revalidate();
         mainPanel.repaint();

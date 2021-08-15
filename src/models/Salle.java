@@ -47,6 +47,10 @@ public class Salle {
         return capacite;
     }
 
+    public String tableString() {
+        return getCode();
+    }
+
     public String toString() {
         return "Salle " + getCode() + ", " + getCampus() + " (Capacité: " + getCapacite() + ")";
     }

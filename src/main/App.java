@@ -24,8 +24,10 @@ public class App implements ActionListener {
     public static ArrayList<Classe> listCla = new ArrayList<Classe>();
     public static ArrayList<Matiere> listMat = new ArrayList<Matiere>();
     public static ArrayList<Salle> listSal = new ArrayList<Salle>();
-    public static ArrayList<String> listCampus;
     public static ArrayList<Horaire> listHor = new ArrayList<Horaire>();
+    public static ArrayList<Caretaker> listCaretaker = new ArrayList<Caretaker>();
+    public static ArrayList<Originator> listOriginator = new ArrayList<Originator>();
+    public static ArrayList<String> listCampus;
 
     String currentPanel = "";
 
@@ -62,6 +64,12 @@ public class App implements ActionListener {
         Collections.sort(listCampus);
         listCampus.forEach((c) -> {
             listHor.add(new Horaire(c));
+            Caretaker tempCaretaker = new Caretaker();
+            tempCaretaker.setCampus(c);
+            listCaretaker.add(tempCaretaker);
+            Originator tempOriginator = new Originator();
+            tempOriginator.setCampus(c);
+            listOriginator.add(tempOriginator);
         });
     }
 
