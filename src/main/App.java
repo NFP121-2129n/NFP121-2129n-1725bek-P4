@@ -10,10 +10,7 @@ import java.io.*;
 import java.util.*;
 
 import views.*;
-import models.Classe;
-import models.Enseignant;
-import models.Matiere;
-import models.Salle;
+import models.*;
 
 public class App implements ActionListener {
 
@@ -28,6 +25,7 @@ public class App implements ActionListener {
     public static ArrayList<Matiere> listMat = new ArrayList<Matiere>();
     public static ArrayList<Salle> listSal = new ArrayList<Salle>();
     public static ArrayList<String> listCampus;
+    public static ArrayList<Horaire> listHor = new ArrayList<Horaire>();
 
     String currentPanel = "";
 
@@ -62,6 +60,9 @@ public class App implements ActionListener {
         listCampus = new ArrayList<String>(
                 List.of("Bikfaya", "Beyrouth", "Nahr Ibrahim", "Tripoli", "Bekaa", "Chtoura", "Baakline"));
         Collections.sort(listCampus);
+        listCampus.forEach((c) -> {
+            listHor.add(new Horaire(c));
+        });
     }
 
     @Override

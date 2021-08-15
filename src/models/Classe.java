@@ -92,10 +92,6 @@ public class Classe {
         this.code = matiere.getCode() + "-" + campus;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setMatiere(Matiere matiere) {
         this.matiere = matiere;
     }

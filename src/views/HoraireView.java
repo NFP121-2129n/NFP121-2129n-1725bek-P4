@@ -9,10 +9,7 @@ import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 
 import main.App;
-import models.Enseignant;
-import models.Matiere;
-import models.Classe;
-import models.Salle;
+import models.*;
 
 public class HoraireView implements ActionListener {
 
@@ -31,6 +28,8 @@ public class HoraireView implements ActionListener {
             List.of("13h00-14h45", "15h00-16h54", "17h00-18h45", "19h00-20h45"));
     JTable table;
     DefaultTableModel tableModel;
+    String[] headers = days.toArray(new String[0]);
+    public Horaire currentHoraire;
 
     public HoraireView() {
         mainPanel = new JPanel();
@@ -140,9 +139,9 @@ public class HoraireView implements ActionListener {
         gridBC.weightx = 1;
         gridBC.weighty = 1;
         gridBC.fill = GridBagConstraints.BOTH;
-        String[] headers = days.toArray(new String[0]);
         tableModel = new DefaultTableModel(headers, 4);
         table = new JTable(tableModel);
+        populateHoraireTable();
         table.setEnabled(false);
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
@@ -162,32 +161,41 @@ public class HoraireView implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o == btnSubmit) {
-            // * Save classe horaire
-            if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
-                    || cbTime.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
-                return;
-            }
-            Classe cla = (Classe) cbCla.getSelectedItem();
-            cla.setEnseignant((Enseignant) cbEns.getSelectedItem());
-            cla.setSalle((Salle) cbSal.getSelectedItem());
-            cla.setJour((String) cbDay.getSelectedItem());
-            cla.setPeriode((String) cbTime.getSelectedItem());
-            cla.setCoupled();
-            // * Set classe in horaire table
-            int colID = days.indexOf(cla.getJour());
-            int rowID = timeMap.indexOf(cla.getPeriode());
-            checkCellAvailabilty(cla, rowID, colID);
-            table.setModel(tableModel);
-            App.frame.revalidate();
-            App.frame.repaint();
+            enregistrer();
         }
         if (o == cbCam) {
             populateByCampus();
+            populateHoraireTable();
         }
         if (o == btnSave) {
             System.out.println("Save horaire instance");
         }
+    }
+
+    public void enregistrer() {
+        if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
+                || cbTime.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
+            return;
+        }
+        // * Check salle capacité
+        if (((Salle) cbSal.getSelectedItem()).getCapacite() < ((Classe) cbCla.getSelectedItem()).getCapacite()) {
+            JOptionPane.showMessageDialog(null, "La capacité de la salle est insuffisante pour cette classe");
+            return;
+        }
+        Classe cla = (Classe) cbCla.getSelectedItem();
+        // * Set classe in horaire table
+        int colID = days.indexOf(cla.getJour());
+        int rowID = timeMap.indexOf(cla.getPeriode());
+        if (!isEnseignantAvailable(rowID, colID)) {
+            JOptionPane.showMessageDialog(null, "L'enseignant " + ((Enseignant) cbEns.getSelectedItem()).getNom()
+                    + " n'est pas disponible durant cette date");
+            return;
+        }
+        checkCellAvailabilty(cla, rowID, colID);
+        populateHoraireTable();
+        App.frame.revalidate();
+        App.frame.repaint();
     }
 
     public void checkCellAvailabilty(Classe cla, int rowID, int colID) {
@@ -196,11 +204,66 @@ public class HoraireView implements ActionListener {
                     "Voulez vous remplacer la classe " + (Classe) tableModel.getValueAt(rowID, colID)
                             + " avec la classe " + cla + " ?",
                     "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                tableModel.setValueAt(cla, rowID, colID);
+                coupleClasse(cla);
+                currentHoraire.setTableCell(cla, rowID, colID);
             }
         } else {
-            tableModel.setValueAt(cla, rowID, colID);
+            coupleClasse(cla);
+            currentHoraire.setTableCell(cla, rowID, colID);
         }
+    }
+
+    public boolean isEnseignantAvailable(int rowID, int colID) {
+        Enseignant tempEns = (Enseignant) cbEns.getSelectedItem();
+        boolean isAvailable = true;
+        for (Horaire hor : App.listHor) {
+            Classe[][] tempHor = hor.getHoraire();
+            for (int i = 0; i < tempHor.length; i++) {
+                for (int j = 0; j < tempHor[i].length; j++) {
+                    if (tempHor[i][j].getEnseignant().getNom().equals(tempEns.getNom()) && i == rowID && j == colID) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+                if (!isAvailable)
+                    break;
+            }
+            if (!isAvailable)
+                break;
+        }
+
+        return isAvailable;
+    }
+
+    public void coupleClasse(Classe cla) {
+        cla.setEnseignant((Enseignant) cbEns.getSelectedItem());
+        cla.setSalle((Salle) cbSal.getSelectedItem());
+        cla.setJour((String) cbDay.getSelectedItem());
+        cla.setPeriode((String) cbTime.getSelectedItem());
+        cla.setCoupled();
+    }
+
+    public void populateHoraireTable() {
+        tableModel = new DefaultTableModel(headers, 4);
+        if (!App.listHor.isEmpty()) {
+            for (Horaire hor : App.listHor) {
+                if (hor.getCampus().equals((String) cbCam.getSelectedItem())) {
+                    currentHoraire = hor;
+                    Classe[][] horTable = hor.getHoraire();
+                    for (int i = 0; i < horTable.length; i++) {
+                        for (int j = 0; j < horTable[i].length; j++) {
+                            if (horTable[i][j] != null) {
+                                tableModel.setValueAt(horTable[i][j], i, j);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        table.setModel(tableModel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     public void populateByCampus() {

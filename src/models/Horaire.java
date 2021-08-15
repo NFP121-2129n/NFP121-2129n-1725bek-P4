@@ -6,14 +6,22 @@ public class Horaire {
     private String campus;
     private Classe horaire[][];
 
-    public Horaire(String campus, Classe horaire[][]) {
-        this.setId(counter++);
+    public Horaire(String campus) {
+        this.id = counter++;
         this.setCampus(campus);
-        this.setHoraire(horaire);
+        this.horaire = new Classe[4][5];
     }
 
     public Classe[][] getHoraire() {
         return horaire;
+    }
+
+    public void setTableCell(Classe cla, int row, int col) {
+        horaire[row][col] = cla;
+    }
+
+    public Classe getTableCell(int row, int col) {
+        return horaire[row][col];
     }
 
     public void setHoraire(Classe horaire[][]) {
@@ -31,9 +39,4 @@ public class Horaire {
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
 }
