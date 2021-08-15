@@ -4,14 +4,14 @@ import java.awt.*;
 import java.util.List;
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.*;
+import java.util.*;
 
+import views.*;
 import models.Classe;
 import models.Enseignant;
 import models.Matiere;
 import models.Salle;
-
-import java.util.*;
-import views.*;
 
 public class App implements ActionListener {
 
@@ -33,7 +33,7 @@ public class App implements ActionListener {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
         frame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 300,
                 (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - 200);
-        frame.setPreferredSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(1000, 500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
         mBar = new JMenuBar();
@@ -109,6 +109,35 @@ public class App implements ActionListener {
             panel = new HoraireView().mainPanel;
             frame.setContentPane(panel);
             frame.pack();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    void loadData() {
+        File directory = new File("../../data");
+        if (directory.isDirectory() && directory.exists()) {
+            for (String campus : listCampus) {
+                FileInputStream fis;
+                ObjectInputStream ois;
+                try {
+                    File fileCla = new File(directory.getName() + "/Classes");
+                    if (fileCla.exists()) {
+                        fis = new FileInputStream(fileCla);
+                        ois = new ObjectInputStream(fis);
+                        listCla = (ArrayList<Classe>) ois.readObject();
+                        ois.close();
+                        if (!listCla.isEmpty()) {
+
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    System.out.println(ex);
+                }
+            }
+        } else {
+            if (!directory.mkdir()) {
+                JOptionPane.showMessageDialog(null, "Répertoire non-trouvée!.");
+            }
         }
     }
 

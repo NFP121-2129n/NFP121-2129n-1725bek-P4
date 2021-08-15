@@ -17,7 +17,7 @@ import models.Salle;
 public class HoraireView implements ActionListener {
 
     public JPanel mainPanel;
-    JPanel pLeft, pRight, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
+    JPanel pLeft, pRight, pRightList, pRightTable, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
     JLabel pageTitle, labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
     JButton btnSubmit, btnSave;
     JComboBox<Classe> cbCla;
@@ -118,8 +118,8 @@ public class HoraireView implements ActionListener {
         pLeft.add(btnSubmit);
         pLeft.add(btnSave);
         // * List
-        pRight = new JPanel();
-        pRight.setLayout(new BorderLayout(10, 10));
+        pRightList = new JPanel();
+        pRightList.setLayout(new BorderLayout(10, 10));
         listModel = new DefaultListModel<Classe>();
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
@@ -132,9 +132,27 @@ public class HoraireView implements ActionListener {
         TitledBorder listBorder = new TitledBorder(null, "Couples");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
-        pRight.add(new JScrollPane(list), BorderLayout.CENTER);
+        pRightList.add(new JScrollPane(list), BorderLayout.CENTER);
         // * Table
-
+        pRightTable = new JPanel();
+        pRightTable.setLayout(new GridBagLayout());
+        GridBagConstraints gridBC = new GridBagConstraints();
+        gridBC.weightx = 1;
+        gridBC.weighty = 1;
+        gridBC.fill = GridBagConstraints.BOTH;
+        String[] headers = days.toArray(new String[0]);
+        tableModel = new DefaultTableModel(headers, 4);
+        table = new JTable(tableModel);
+        table.setEnabled(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        table.setRowHeight(46);
+        pRightTable.add(table);
+        pRightTable.add(new JScrollPane(table), gridBC);
+        pRight = new JPanel();
+        pRight.setLayout(new GridLayout(2, 1));
+        pRight.add(pRightList);
+        pRight.add(pRightTable);
         // * Build View
         mainPanel.add(pLeft);
         mainPanel.add(pRight);
@@ -144,6 +162,7 @@ public class HoraireView implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o == btnSubmit) {
+            // * Save classe horaire
             if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
                     || cbTime.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
@@ -155,12 +174,19 @@ public class HoraireView implements ActionListener {
             cla.setJour((String) cbDay.getSelectedItem());
             cla.setPeriode((String) cbTime.getSelectedItem());
             cla.setCoupled();
-            App.panel = new HoraireView().mainPanel;
-            App.frame.setContentPane(App.panel);
+            // * Set classe in horaire table
+            int colID = days.indexOf(cla.getJour());
+            int rowID = timeMap.indexOf(cla.getPeriode());
+            tableModel.setValueAt(cla, rowID, colID);
+            table.setModel(tableModel);
             App.frame.revalidate();
             App.frame.repaint();
-        } else if (o == cbCam) {
+        }
+        if (o == cbCam) {
             populateByCampus();
+        }
+        if (o == btnSave) {
+            System.out.println("Save horaire instance");
         }
     }
 
