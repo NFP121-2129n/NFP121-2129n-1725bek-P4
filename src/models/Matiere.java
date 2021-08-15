@@ -1,6 +1,8 @@
 package models;
 
-public class Matiere {
+import java.io.Serializable;
+
+public class Matiere implements Serializable {
     private static int counter = 1;
     private int id;
     private String code;

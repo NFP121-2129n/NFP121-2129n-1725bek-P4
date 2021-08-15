@@ -18,7 +18,7 @@ public class App implements ActionListener {
     public static JPanel panel;
 
     JMenuBar mBar;
-    JMenuItem iEns, iCla, iSal, iMat, iHor;
+    JMenuItem iEns, iCla, iSal, iMat, iHor, iSave, iLoad, iVer;
 
     public static ArrayList<Enseignant> listEns = new ArrayList<Enseignant>();
     public static ArrayList<Classe> listCla = new ArrayList<Classe>();
@@ -49,11 +49,20 @@ public class App implements ActionListener {
         iMat.addActionListener(this);
         iHor = new JMenuItem("Horaire");
         iHor.addActionListener(this);
+        iSave = new JMenuItem("Sauvegarder");
+        iSave.addActionListener(this);
+        iLoad = new JMenuItem("Charger");
+        iLoad.addActionListener(this);
+        iVer = new JMenuItem("Version");
+        iVer.addActionListener(this);
         mBar.add(iEns);
         mBar.add(iCla);
         mBar.add(iSal);
         mBar.add(iMat);
         mBar.add(iHor);
+        mBar.add(iSave);
+        mBar.add(iLoad);
+        mBar.add(iVer);
         frame.setJMenuBar(mBar);
         frame.pack();
         frame.setResizable(false);
@@ -121,18 +130,25 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        if (o == iSave) {
+            saveData();
+        }
+        if (o == iLoad) {
+            loadData();
+        }
+        if (o == iVer) {
+            JOptionPane.showMessageDialog(null, "Version 1.0.0");
+        }
     }
 
     @SuppressWarnings("unchecked")
     public void loadData() {
-        File directory = new File("../../data");
+        File directory = new File("data");
         if (directory.isDirectory() && directory.exists()) {
             FileInputStream fis;
             ObjectInputStream ois;
-
-            // * Classes
             try {
-                File fileCla = new File(directory.getName() + "/classes");
+                File fileCla = new File(directory.getName() + "\\classes");
                 if (fileCla.exists()) {
                     fis = new FileInputStream(fileCla);
                     ois = new ObjectInputStream(fis);
@@ -144,12 +160,10 @@ public class App implements ActionListener {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Chargement des classes erronné!");
             }
-
-            // * Salle
             try {
-                File fileSal = new File(directory.getName() + "/salles");
+                File fileSal = new File(directory.getName() + "\\salles");
                 if (fileSal.exists()) {
                     fis = new FileInputStream(fileSal);
                     ois = new ObjectInputStream(fis);
@@ -161,12 +175,10 @@ public class App implements ActionListener {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Chargement des salles erronné!");
             }
-
-            // * Enseignant
             try {
-                File fileEns = new File(directory.getName() + "/enseignants");
+                File fileEns = new File(directory.getName() + "\\enseignants");
                 if (fileEns.exists()) {
                     fis = new FileInputStream(fileEns);
                     ois = new ObjectInputStream(fis);
@@ -178,12 +190,10 @@ public class App implements ActionListener {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Chargement des enseignants erronné!");
             }
-
-            // * Matiere
             try {
-                File fileMat = new File(directory.getName() + "/matieres");
+                File fileMat = new File(directory.getName() + "\\matieres");
                 if (fileMat.exists()) {
                     fis = new FileInputStream(fileMat);
                     ois = new ObjectInputStream(fis);
@@ -195,12 +205,10 @@ public class App implements ActionListener {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Chargement des matières erronné");
             }
-
-            // * Horaire
             try {
-                File fileHor = new File(directory.getName() + "/horaires");
+                File fileHor = new File(directory.getName() + "\\horaires");
                 if (fileHor.exists()) {
                     fis = new FileInputStream(fileHor);
                     ois = new ObjectInputStream(fis);
@@ -212,12 +220,77 @@ public class App implements ActionListener {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Chargement des horaires erronné");
             }
-
         } else {
-            JOptionPane.showMessageDialog(null, "Répertoire non-trouvée!.");
+            JOptionPane.showMessageDialog(null, "Répertoire non-trouvée!");
         }
+    }
+
+    public void saveData() {
+        File directory = new File("data");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        FileOutputStream fos;
+        ObjectOutputStream oos;
+        try {
+            File fileEns = new File(directory.getName() + "\\enseignants");
+            fileEns.createNewFile();
+            fos = new FileOutputStream(fileEns);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(listEns);
+            oos.close();
+        } catch (IOException e) {
+            // JOptionPane.showMessageDialog(null, "Sauvegarde des enseignants erronnée!");
+            JOptionPane.showMessageDialog(null, e);
+            return;
+        }
+        try {
+            File fileCla = new File(directory.getName() + "\\classes");
+            fileCla.createNewFile();
+            fos = new FileOutputStream(fileCla);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(listCla);
+            oos.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Sauvegarde des classes erronnée!");
+            return;
+        }
+        try {
+            File fileMat = new File(directory.getName() + "\\matieres");
+            fileMat.createNewFile();
+            fos = new FileOutputStream(fileMat);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(listMat);
+            oos.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Sauvegarde des matières erronnée!");
+            return;
+        }
+        try {
+            File fileSal = new File(directory.getName() + "\\salles");
+            fileSal.createNewFile();
+            fos = new FileOutputStream(fileSal);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(listSal);
+            oos.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Sauvegarde des salles erronnée!");
+            return;
+        }
+        try {
+            File fileHor = new File(directory.getName() + "\\salles");
+            fileHor.createNewFile();
+            fos = new FileOutputStream(fileHor);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(listHor);
+            oos.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Sauvegarde des horaires erronnée!");
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Sauvegarde réussie.");
     }
 
     public static void main(String[] args) {

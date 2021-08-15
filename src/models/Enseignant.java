@@ -1,6 +1,8 @@
 package models;
 
-public class Enseignant {
+import java.io.Serializable;
+
+public class Enseignant implements Serializable {
     private static int counter = 1;
     private int id;
     private String nom;

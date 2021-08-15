@@ -1,6 +1,8 @@
 package models;
 
-public class Salle {
+import java.io.Serializable;
+
+public class Salle implements Serializable {
 
     private static int counter = 1;
     private int id;

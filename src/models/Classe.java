@@ -1,6 +1,8 @@
 package models;
 
-abstract public class Classe {
+import java.io.Serializable;
+
+abstract public class Classe implements Serializable {
     private static int counter = 1;
     private int id;
     private String code;

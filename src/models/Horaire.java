@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Horaire {
+public class Horaire implements Serializable {
 
     private static int counter = 1;
     private int id;
