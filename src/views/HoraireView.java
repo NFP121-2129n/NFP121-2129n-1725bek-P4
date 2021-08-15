@@ -145,7 +145,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         table.setEnabled(false);
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
-        table.setRowHeight(46);
+        table.setRowHeight(58);
         pRightTable.add(table);
         pRightTable.add(new JScrollPane(table), gridBC);
         pRight = new JPanel();

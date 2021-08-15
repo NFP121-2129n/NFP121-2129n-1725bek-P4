@@ -33,7 +33,7 @@ public class App implements ActionListener {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
         frame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 300,
                 (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - 200);
-        frame.setPreferredSize(new Dimension(1000, 500));
+        frame.setPreferredSize(new Dimension(1200, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
         mBar = new JMenuBar();
