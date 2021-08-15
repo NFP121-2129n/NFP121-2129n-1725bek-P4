@@ -9,6 +9,7 @@ import javax.swing.border.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import java.util.stream.Collectors;
 
 import main.App;
 import models.*;
@@ -198,28 +199,35 @@ public class HoraireView implements ActionListener, ListSelectionListener {
 
     public void checkCellAvailabilty(ClasseNonCouple cla, int rowID, int colID) {
         if (tableModel.getValueAt(rowID, colID) != null) {
-            if (JOptionPane.showConfirmDialog(null,
-                    "Voulez vous remplacer la classe " + (ClasseCouple) tableModel.getValueAt(rowID, colID)
-                            + " avec la classe " + cla + " ?",
-                    "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                ClasseCouple claCouple = coupleClasse(cla);
-                currentHoraire.setTableCell(claCouple, rowID, colID);
+            for (Horaire hor : App.listHor) {
+                if (hor.getCampus().equals((String) cbCam.getSelectedItem())) {
+                    for (int k = 0; k < hor.getHoraire()[rowID][colID].size(); k++) {
+                        if (hor.getHoraire()[rowID][colID].get(k).getSalle()
+                                .getId() == ((Salle) cbSal.getSelectedItem()).getId()) {
+                            JOptionPane.showMessageDialog(null,
+                                    "La salle " + ((Salle) cbSal.getSelectedItem()).getCode()
+                                            + " est deja occuper durant cette date.");
+                            return;
+                        }
+                    }
+                }
             }
-        } else {
-            ClasseCouple claCouple = coupleClasse(cla);
-            currentHoraire.setTableCell(claCouple, rowID, colID);
         }
+        ClasseCouple claCouple = coupleClasse(cla);
+        currentHoraire.setTableCell(claCouple, rowID, colID);
     }
 
     public boolean isEnseignantAvailable(int rowID, int colID) {
         Enseignant tempEns = (Enseignant) cbEns.getSelectedItem();
         for (Horaire hor : App.listHor) {
-            ClasseCouple[][] tempHor = hor.getHoraire();
+            ArrayList<ClasseCouple>[][] tempHor = hor.getHoraire();
             for (int i = 0; i < tempHor.length; i++) {
                 for (int j = 0; j < tempHor[i].length; j++) {
-                    if (tempHor[i][j] != null && tempHor[i][j].getEnseignant().getNom().equals(tempEns.getNom())
-                            && i == rowID && j == colID) {
-                        return false;
+                    for (int k = 0; k < tempHor[i][j].size(); k++) {
+                        if (tempHor[i][j].get(k).getEnseignant().getId() == tempEns.getId() && i == rowID
+                                && j == colID) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -241,11 +249,13 @@ public class HoraireView implements ActionListener, ListSelectionListener {
             for (Horaire hor : App.listHor) {
                 if (hor.getCampus().equals((String) cbCam.getSelectedItem())) {
                     currentHoraire = hor;
-                    Classe[][] horTable = hor.getHoraire();
+
+                    ArrayList<ClasseCouple>[][] horTable = hor.getHoraire();
                     for (int i = 0; i < horTable.length; i++) {
                         for (int j = 0; j < horTable[i].length; j++) {
                             if (horTable[i][j] != null) {
-                                tableModel.setValueAt(horTable[i][j], i, j);
+                                tableModel.setValueAt(horTable[i][j].stream().map(Object::toString)
+                                        .collect(Collectors.joining("----------------------\n")), i, j);
                             }
                         }
                     }
