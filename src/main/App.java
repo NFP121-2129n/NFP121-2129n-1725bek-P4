@@ -116,7 +116,7 @@ public class App implements ActionListener {
     }
 
     @SuppressWarnings("unchecked")
-    void loadData() {
+    public void loadData() {
         File directory = new File("../../data");
         if (directory.isDirectory() && directory.exists()) {
             FileInputStream fis;

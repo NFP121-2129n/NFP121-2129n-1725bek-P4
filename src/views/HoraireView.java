@@ -32,6 +32,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     DefaultTableModel tableModel;
     String[] headers = days.toArray(new String[0]);
     public Horaire currentHoraire;
+    ClasseFactory classeFactory = ClasseFactory.getInstance();
 
     public HoraireView() {
         mainPanel = new JPanel();
@@ -48,6 +49,18 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         labelSal = new JLabel("Salle :");
         labelDay = new JLabel("Jour :");
         labelTime = new JLabel("Période :");
+        // * List
+        pRightList = new JPanel();
+        pRightList.setLayout(new BorderLayout(10, 10));
+        listModel = new DefaultListModel<Classe>();
+        populateList();
+        list = new JList<Classe>(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
+        TitledBorder listBorder = new TitledBorder(null, "Couples");
+        listBorder.setTitleJustification(TitledBorder.CENTER);
+        list.setBorder(listBorder);
+        pRightList.add(new JScrollPane(list), BorderLayout.CENTER);
         // * Inputs
         cbCam = new JComboBox<String>();
         App.listCampus.forEach((v) -> {
@@ -58,7 +71,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         cbCla = new JComboBox<Classe>();
         cbSal = new JComboBox<Salle>();
         populateByCampus();
-        cbCla.setPrototypeDisplayValue(new ClasseNonCouple(0, new Matiere(""), "XXXXXXXXXXXXXXX"));
+        cbCla.setPrototypeDisplayValue(classeFactory.createClasse(0, new Matiere(""), "XXXXXXXXXXXXXXX"));
         cbEns = new JComboBox<Enseignant>();
         if (!App.listEns.isEmpty()) {
             App.listEns.forEach((v) -> {
@@ -118,17 +131,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         pLeft.add(pInput5);
         pLeft.add(btnSubmit);
         pLeft.add(btnSave);
-        // * List
-        pRightList = new JPanel();
-        pRightList.setLayout(new BorderLayout(10, 10));
-        listModel = new DefaultListModel<Classe>();
-        populateList();
-        list = new JList<Classe>(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        TitledBorder listBorder = new TitledBorder(null, "Couples");
-        listBorder.setTitleJustification(TitledBorder.CENTER);
-        list.setBorder(listBorder);
-        pRightList.add(new JScrollPane(list), BorderLayout.CENTER);
         // * Table
         pRightTable = new JPanel();
         pRightTable.setLayout(new GridBagLayout());
@@ -226,8 +228,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     }
 
     public ClasseCouple coupleClasse(ClasseNonCouple cla) {
-        ClasseCouple claCouple = new ClasseCouple(cla.getCapacite(), cla.getMatiere(), cla.getCampus(),
-                (String) cbTime.getSelectedItem(), (String) cbDay.getSelectedItem(),
+        ClasseCouple claCouple = (ClasseCouple) classeFactory.createClasse(cla.getCapacite(), cla.getMatiere(),
+                cla.getCampus(), (String) cbTime.getSelectedItem(), (String) cbDay.getSelectedItem(),
                 (Enseignant) cbEns.getSelectedItem(), (Salle) cbSal.getSelectedItem());
         App.listCla.add(claCouple);
         return claCouple;
@@ -259,13 +261,18 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     public void populateByCampus() {
         cbCla.removeAllItems();
         cbSal.removeAllItems();
-        // listModel.clear();
+        listModel.clear();
         cbCla.setEnabled(false);
         cbSal.setEnabled(false);
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
-                if (v instanceof ClasseNonCouple && v.getCampus().equals((String) cbCam.getSelectedItem())) {
-                    cbCla.addItem(v);
+                if (v.getCampus().equals((String) cbCam.getSelectedItem())) {
+                    if (v instanceof ClasseNonCouple) {
+                        cbCla.addItem(v);
+                    }
+                    if (v instanceof ClasseCouple) {
+                        listModel.addElement(v);
+                    }
                 }
             });
             if (cbCla.getItemCount() > 0) {
@@ -301,6 +308,32 @@ public class HoraireView implements ActionListener, ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        // TODO edit horaire
+        if (e.getSource() == list) {
+            if (list.getSelectedValue() == null) {
+                btnSubmit.setText("Enregistrer");
+                cbCam.setSelectedIndex(0);
+                cbDay.setSelectedIndex(0);
+                cbTime.setSelectedIndex(0);
+                if (cbCla.getItemCount() > 0) {
+                    cbCla.setSelectedIndex(0);
+                } else {
+                    cbCla.setSelectedIndex(-1);
+                }
+                if (cbEns.getItemCount() > 0) {
+                    cbEns.setSelectedIndex(0);
+                } else {
+                    cbEns.setSelectedIndex(-1);
+                }
+                if (cbSal.getItemCount() > 0) {
+                    cbSal.setSelectedIndex(0);
+                } else {
+                    cbSal.setSelectedIndex(-1);
+                }
+                return;
+            }
+            btnSubmit.setText("Mettre à jour");
+            cbCla.setSelectedItem(list.getSelectedValue());
+            cbCam.setSelectedItem(list.getSelectedValue().getCampus());
+        }
     }
 }

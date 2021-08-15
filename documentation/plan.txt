@@ -1,7 +1,6 @@
 // To Do After Lunch
 
 "Horaire" => Memento (rollback, save states, etc...);
-"Horaire" => Command (on create "Horaire" execute a set of actions);
 Edit horaire
 Save files
 

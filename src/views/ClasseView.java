@@ -21,6 +21,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
     JComboBox<Matiere> cbMatiere;
     JList<Classe> list;
     DefaultListModel<Classe> listModel;
+    ClasseFactory classeFactory = ClasseFactory.getInstance();
 
     public ClasseView() {
         mainPanel = new JPanel();
@@ -114,7 +115,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
                 return;
             }
             if (list.getSelectedValue() == null) {
-                Classe cla = new ClasseNonCouple(Integer.parseInt(tfCapacity.getText()),
+                Classe cla = classeFactory.createClasse(Integer.parseInt(tfCapacity.getText()),
                         (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
                 App.listCla.add(cla);
             } else {
