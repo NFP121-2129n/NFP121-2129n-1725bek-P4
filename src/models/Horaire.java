@@ -4,27 +4,27 @@ public class Horaire {
     private static int counter = 1;
     private int id;
     private String campus;
-    private Classe horaire[][];
+    private ClasseCouple horaire[][];
 
     public Horaire(String campus) {
         this.id = counter++;
         this.setCampus(campus);
-        this.horaire = new Classe[4][5];
+        this.horaire = new ClasseCouple[4][5];
     }
 
-    public Classe[][] getHoraire() {
+    public ClasseCouple[][] getHoraire() {
         return horaire;
     }
 
-    public void setTableCell(Classe cla, int row, int col) {
+    public void setTableCell(ClasseCouple cla, int row, int col) {
         horaire[row][col] = cla;
     }
 
-    public Classe getTableCell(int row, int col) {
+    public ClasseCouple getTableCell(int row, int col) {
         return horaire[row][col];
     }
 
-    public void setHoraire(Classe horaire[][]) {
+    public void setHoraire(ClasseCouple horaire[][]) {
         this.horaire = horaire;
     }
 

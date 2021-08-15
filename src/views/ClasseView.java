@@ -8,8 +8,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import main.App;
-import models.Classe;
-import models.Matiere;
+import models.*;
 
 public class ClasseView implements ActionListener, ListSelectionListener {
 
@@ -80,7 +79,9 @@ public class ClasseView implements ActionListener, ListSelectionListener {
         listModel = new DefaultListModel<Classe>();
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((c) -> {
-                listModel.addElement(c);
+                if (c instanceof ClasseNonCouple) {
+                    listModel.addElement(c);
+                }
             });
         }
         list = new JList<Classe>(listModel);
@@ -112,10 +113,9 @@ public class ClasseView implements ActionListener, ListSelectionListener {
                 JOptionPane.showMessageDialog(null, "La capacité doit être un entier.");
                 return;
             }
-
             if (list.getSelectedValue() == null) {
-                Classe cla = new Classe(Integer.parseInt(tfCapacity.getText()), (Matiere) cbMatiere.getSelectedItem(),
-                        (String) cbCampus.getSelectedItem());
+                Classe cla = new ClasseNonCouple(Integer.parseInt(tfCapacity.getText()),
+                        (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
                 App.listCla.add(cla);
             } else {
                 Classe cla = list.getSelectedValue();

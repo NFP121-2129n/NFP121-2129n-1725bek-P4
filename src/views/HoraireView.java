@@ -58,7 +58,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         cbCla = new JComboBox<Classe>();
         cbSal = new JComboBox<Salle>();
         populateByCampus();
-        cbCla.setPrototypeDisplayValue(new Classe(0, new Matiere(""), "XXXXXXXXXXXXXXX"));
+        cbCla.setPrototypeDisplayValue(new ClasseNonCouple(0, new Matiere(""), "XXXXXXXXXXXXXXX"));
         cbEns = new JComboBox<Enseignant>();
         if (!App.listEns.isEmpty()) {
             App.listEns.forEach((v) -> {
@@ -124,7 +124,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         listModel = new DefaultListModel<Classe>();
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
-                if (v.isCoupled())
+                if (v instanceof ClasseCouple)
                     listModel.addElement(v);
             });
         }
@@ -175,7 +175,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     }
 
     public void enregistrer() {
-
         if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
                 || cbTime.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
@@ -186,7 +185,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
             JOptionPane.showMessageDialog(null, "La capacité de la salle est insuffisante pour cette classe");
             return;
         }
-        Classe cla = (Classe) cbCla.getSelectedItem();
+        ClasseNonCouple cla = (ClasseNonCouple) cbCla.getSelectedItem();
         // * Set classe in horaire table
         int colID = days.indexOf((String) cbDay.getSelectedItem());
         int rowID = timeMap.indexOf((String) cbTime.getSelectedItem());
@@ -197,32 +196,32 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
         checkCellAvailabilty(cla, rowID, colID);
         populateHoraireTable();
+
+        App.panel = new HoraireView().mainPanel;
+        App.frame.setContentPane(App.panel);
         App.frame.revalidate();
         App.frame.repaint();
     }
 
-    public void checkCellAvailabilty(Classe cla, int rowID, int colID) {
-        System.out.println(colID);
-        System.out.println(rowID);
-
+    public void checkCellAvailabilty(ClasseNonCouple cla, int rowID, int colID) {
         if (tableModel.getValueAt(rowID, colID) != null) {
             if (JOptionPane.showConfirmDialog(null,
-                    "Voulez vous remplacer la classe " + (Classe) tableModel.getValueAt(rowID, colID)
+                    "Voulez vous remplacer la classe " + (ClasseCouple) tableModel.getValueAt(rowID, colID)
                             + " avec la classe " + cla + " ?",
                     "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                coupleClasse(cla);
-                currentHoraire.setTableCell(cla, rowID, colID);
+                ClasseCouple claCouple = coupleClasse(cla);
+                currentHoraire.setTableCell(claCouple, rowID, colID);
             }
         } else {
-            coupleClasse(cla);
-            currentHoraire.setTableCell(cla, rowID, colID);
+            ClasseCouple claCouple = coupleClasse(cla);
+            currentHoraire.setTableCell(claCouple, rowID, colID);
         }
     }
 
     public boolean isEnseignantAvailable(int rowID, int colID) {
         Enseignant tempEns = (Enseignant) cbEns.getSelectedItem();
         for (Horaire hor : App.listHor) {
-            Classe[][] tempHor = hor.getHoraire();
+            ClasseCouple[][] tempHor = hor.getHoraire();
             for (int i = 0; i < tempHor.length; i++) {
                 for (int j = 0; j < tempHor[i].length; j++) {
                     if (tempHor[i][j] != null && tempHor[i][j].getEnseignant().getNom().equals(tempEns.getNom())
@@ -235,12 +234,12 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         return true;
     }
 
-    public void coupleClasse(Classe cla) {
-        cla.setEnseignant((Enseignant) cbEns.getSelectedItem());
-        cla.setSalle((Salle) cbSal.getSelectedItem());
-        cla.setJour((String) cbDay.getSelectedItem());
-        cla.setPeriode((String) cbTime.getSelectedItem());
-        cla.setCoupled();
+    public ClasseCouple coupleClasse(ClasseNonCouple cla) {
+        ClasseCouple claCouple = new ClasseCouple(cla.getCapacite(), cla.getMatiere(), cla.getCampus(),
+                (String) cbTime.getSelectedItem(), (String) cbDay.getSelectedItem(),
+                (Enseignant) cbEns.getSelectedItem(), (Salle) cbSal.getSelectedItem());
+        App.listCla.add(claCouple);
+        return claCouple;
     }
 
     public void populateHoraireTable() {
@@ -274,10 +273,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         cbSal.setEnabled(false);
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
-                if (v.getCampus().equals((String) cbCam.getSelectedItem())) {
+                if (v instanceof ClasseNonCouple && v.getCampus().equals((String) cbCam.getSelectedItem())) {
                     cbCla.addItem(v);
-                    // if (v.isCoupled())
-                    // listModel.addElement(v);
                 }
             });
             if (cbCla.getItemCount() > 0) {
