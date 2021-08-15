@@ -122,12 +122,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         pRightList = new JPanel();
         pRightList.setLayout(new BorderLayout(10, 10));
         listModel = new DefaultListModel<Classe>();
-        if (!App.listCla.isEmpty()) {
-            App.listCla.forEach((v) -> {
-                if (v instanceof ClasseCouple)
-                    listModel.addElement(v);
-            });
-        }
+        populateList();
         list = new JList<Classe>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TitledBorder listBorder = new TitledBorder(null, "Couples");
@@ -174,6 +169,18 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
     }
 
+    public void populateList() {
+        listModel.clear();
+        if (!App.listCla.isEmpty()) {
+            App.listCla.forEach((v) -> {
+                if (v instanceof ClasseCouple)
+                    listModel.addElement(v);
+            });
+        }
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
     public void enregistrer() {
         if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
                 || cbTime.getSelectedItem() == null) {
@@ -196,11 +203,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
         checkCellAvailabilty(cla, rowID, colID);
         populateHoraireTable();
-
-        App.panel = new HoraireView().mainPanel;
-        App.frame.setContentPane(App.panel);
-        App.frame.revalidate();
-        App.frame.repaint();
+        populateList();
     }
 
     public void checkCellAvailabilty(ClasseNonCouple cla, int rowID, int colID) {
