@@ -11,6 +11,9 @@ public class Matiere {
     }
 
     // * Setters
+    public static void setCounter(int i) {
+        counter = i;
+    }
 
     public void setCode(String code) {
         this.code = code;

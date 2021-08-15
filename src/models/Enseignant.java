@@ -11,6 +11,9 @@ public class Enseignant {
     }
 
     // * Setters
+    public static void setCounter(int i) {
+        counter = i;
+    }
 
     public void setNom(String nom) {
         this.nom = nom;

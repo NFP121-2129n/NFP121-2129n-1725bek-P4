@@ -18,6 +18,10 @@ abstract public class Classe {
 
     // * Setters
 
+    public static void setCounter(int i) {
+        counter = i;
+    }
+
     public void setCode() {
         this.code = matiere.getCode() + "-" + campus;
     }

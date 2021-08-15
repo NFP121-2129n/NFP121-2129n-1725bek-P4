@@ -23,6 +23,10 @@ public class Horaire {
 
     // * Setters
 
+    public static void setCounter(int i) {
+        counter = i;
+    }
+
     public void setCampus(String campus) {
         this.campus = campus;
     }

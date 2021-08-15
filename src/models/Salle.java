@@ -16,6 +16,9 @@ public class Salle {
     }
 
     // * Setters
+    public static void setCounter(int i) {
+        counter = i;
+    }
 
     public void setCode(String code) {
         this.code = code;

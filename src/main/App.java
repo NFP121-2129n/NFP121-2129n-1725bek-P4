@@ -129,15 +129,86 @@ public class App implements ActionListener {
         if (directory.isDirectory() && directory.exists()) {
             FileInputStream fis;
             ObjectInputStream ois;
+
+            // * Classes
             try {
-                File fileCla = new File(directory.getName() + "/Classes");
+                File fileCla = new File(directory.getName() + "/classes");
                 if (fileCla.exists()) {
                     fis = new FileInputStream(fileCla);
                     ois = new ObjectInputStream(fis);
-                    listCla = (ArrayList<Classe>) ois.readObject();
+                    ArrayList<Classe> tempList = (ArrayList<Classe>) ois.readObject();
                     ois.close();
-                    if (!listCla.isEmpty()) {
+                    if (!tempList.isEmpty()) {
+                        listCla = tempList;
+                        Classe.setCounter(listCla.size() + 1);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                System.out.println(ex);
+            }
 
+            // * Salle
+            try {
+                File fileSal = new File(directory.getName() + "/salles");
+                if (fileSal.exists()) {
+                    fis = new FileInputStream(fileSal);
+                    ois = new ObjectInputStream(fis);
+                    ArrayList<Salle> tempList = (ArrayList<Salle>) ois.readObject();
+                    ois.close();
+                    if (!tempList.isEmpty()) {
+                        listSal = tempList;
+                        Salle.setCounter(listSal.size() + 1);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                System.out.println(ex);
+            }
+
+            // * Enseignant
+            try {
+                File fileEns = new File(directory.getName() + "/enseignants");
+                if (fileEns.exists()) {
+                    fis = new FileInputStream(fileEns);
+                    ois = new ObjectInputStream(fis);
+                    ArrayList<Enseignant> tempList = (ArrayList<Enseignant>) ois.readObject();
+                    ois.close();
+                    if (!tempList.isEmpty()) {
+                        listEns = tempList;
+                        Enseignant.setCounter(listEns.size() + 1);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                System.out.println(ex);
+            }
+
+            // * Matiere
+            try {
+                File fileMat = new File(directory.getName() + "/matieres");
+                if (fileMat.exists()) {
+                    fis = new FileInputStream(fileMat);
+                    ois = new ObjectInputStream(fis);
+                    ArrayList<Matiere> tempList = (ArrayList<Matiere>) ois.readObject();
+                    ois.close();
+                    if (!tempList.isEmpty()) {
+                        listMat = tempList;
+                        Matiere.setCounter(listMat.size() + 1);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                System.out.println(ex);
+            }
+
+            // * Horaire
+            try {
+                File fileHor = new File(directory.getName() + "/horaires");
+                if (fileHor.exists()) {
+                    fis = new FileInputStream(fileHor);
+                    ois = new ObjectInputStream(fis);
+                    ArrayList<Horaire> tempList = (ArrayList<Horaire>) ois.readObject();
+                    ois.close();
+                    if (!tempList.isEmpty()) {
+                        listHor = tempList;
+                        Horaire.setCounter(listHor.size() + 1);
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
