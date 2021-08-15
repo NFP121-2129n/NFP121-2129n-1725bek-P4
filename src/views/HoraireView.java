@@ -6,12 +6,14 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import main.App;
 import models.*;
 
-public class HoraireView implements ActionListener {
+public class HoraireView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
     JPanel pLeft, pRight, pRightList, pRightTable, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
@@ -173,6 +175,7 @@ public class HoraireView implements ActionListener {
     }
 
     public void enregistrer() {
+
         if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
                 || cbTime.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "Assurez vous que toutes les valeurs sont choisies");
@@ -185,11 +188,11 @@ public class HoraireView implements ActionListener {
         }
         Classe cla = (Classe) cbCla.getSelectedItem();
         // * Set classe in horaire table
-        int colID = days.indexOf(cla.getJour());
-        int rowID = timeMap.indexOf(cla.getPeriode());
+        int colID = days.indexOf((String) cbDay.getSelectedItem());
+        int rowID = timeMap.indexOf((String) cbTime.getSelectedItem());
         if (!isEnseignantAvailable(rowID, colID)) {
             JOptionPane.showMessageDialog(null, "L'enseignant " + ((Enseignant) cbEns.getSelectedItem()).getNom()
-                    + " n'est pas disponible durant cette date");
+                    + " est occupé durant cette date");
             return;
         }
         checkCellAvailabilty(cla, rowID, colID);
@@ -199,6 +202,9 @@ public class HoraireView implements ActionListener {
     }
 
     public void checkCellAvailabilty(Classe cla, int rowID, int colID) {
+        System.out.println(colID);
+        System.out.println(rowID);
+
         if (tableModel.getValueAt(rowID, colID) != null) {
             if (JOptionPane.showConfirmDialog(null,
                     "Voulez vous remplacer la classe " + (Classe) tableModel.getValueAt(rowID, colID)
@@ -215,24 +221,18 @@ public class HoraireView implements ActionListener {
 
     public boolean isEnseignantAvailable(int rowID, int colID) {
         Enseignant tempEns = (Enseignant) cbEns.getSelectedItem();
-        boolean isAvailable = true;
         for (Horaire hor : App.listHor) {
             Classe[][] tempHor = hor.getHoraire();
             for (int i = 0; i < tempHor.length; i++) {
                 for (int j = 0; j < tempHor[i].length; j++) {
-                    if (tempHor[i][j].getEnseignant().getNom().equals(tempEns.getNom()) && i == rowID && j == colID) {
-                        isAvailable = false;
-                        break;
+                    if (tempHor[i][j] != null && tempHor[i][j].getEnseignant().getNom().equals(tempEns.getNom())
+                            && i == rowID && j == colID) {
+                        return false;
                     }
                 }
-                if (!isAvailable)
-                    break;
             }
-            if (!isAvailable)
-                break;
         }
-
-        return isAvailable;
+        return true;
     }
 
     public void coupleClasse(Classe cla) {
@@ -269,12 +269,15 @@ public class HoraireView implements ActionListener {
     public void populateByCampus() {
         cbCla.removeAllItems();
         cbSal.removeAllItems();
+        // listModel.clear();
         cbCla.setEnabled(false);
         cbSal.setEnabled(false);
         if (!App.listCla.isEmpty()) {
             App.listCla.forEach((v) -> {
                 if (v.getCampus().equals((String) cbCam.getSelectedItem())) {
                     cbCla.addItem(v);
+                    // if (v.isCoupled())
+                    // listModel.addElement(v);
                 }
             });
             if (cbCla.getItemCount() > 0) {
@@ -293,5 +296,10 @@ public class HoraireView implements ActionListener {
         }
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+
     }
 }
