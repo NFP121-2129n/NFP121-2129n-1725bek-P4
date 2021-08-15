@@ -17,7 +17,7 @@ import models.*;
 public class HoraireView implements ActionListener, ListSelectionListener {
 
     public JPanel mainPanel;
-    JPanel pLeft, pRight, pRightList, pRightTable, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
+    JPanel pTop, pBottom, pLeft, pRight, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
     JLabel pageTitle, labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
     JButton btnSubmit, btnSave;
     JComboBox<Classe> cbCla;
@@ -41,7 +41,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         TitledBorder title = BorderFactory.createTitledBorder(loweredetched, "Horaire");
         title.setTitleJustification(TitledBorder.CENTER);
         mainPanel.setBorder(title);
-        mainPanel.setLayout(new GridLayout(1, 2));
+        mainPanel.setLayout(new GridLayout(2, 1));
         // * Labels
         pageTitle = new JLabel("Entrer les couples infos :");
         labelCam = new JLabel("Choisir campus :");
@@ -51,8 +51,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         labelDay = new JLabel("Jour :");
         labelTime = new JLabel("Période :");
         // * List
-        pRightList = new JPanel();
-        pRightList.setLayout(new BorderLayout(10, 10));
+        pRight = new JPanel();
+        pRight.setLayout(new BorderLayout(10, 10));
         listModel = new DefaultListModel<Classe>();
         populateList();
         list = new JList<Classe>(listModel);
@@ -61,7 +61,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         TitledBorder listBorder = new TitledBorder(null, "Couples");
         listBorder.setTitleJustification(TitledBorder.CENTER);
         list.setBorder(listBorder);
-        pRightList.add(new JScrollPane(list), BorderLayout.CENTER);
+        pRight.add(new JScrollPane(list), BorderLayout.CENTER);
         // * Inputs
         cbCam = new JComboBox<String>();
         App.listCampus.forEach((v) -> {
@@ -133,8 +133,8 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         pLeft.add(btnSubmit);
         pLeft.add(btnSave);
         // * Table
-        pRightTable = new JPanel();
-        pRightTable.setLayout(new GridBagLayout());
+        pBottom = new JPanel();
+        pBottom.setLayout(new GridBagLayout());
         GridBagConstraints gridBC = new GridBagConstraints();
         gridBC.weightx = 1;
         gridBC.weighty = 1;
@@ -145,16 +145,16 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         table.setEnabled(false);
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
-        table.setRowHeight(58);
-        pRightTable.add(table);
-        pRightTable.add(new JScrollPane(table), gridBC);
-        pRight = new JPanel();
-        pRight.setLayout(new GridLayout(2, 1));
-        pRight.add(pRightList);
-        pRight.add(pRightTable);
+        table.setRowHeight(83);
+        pBottom.add(table);
+        pBottom.add(new JScrollPane(table), gridBC);
+        pTop = new JPanel();
+        pTop.setLayout(new GridLayout(1, 2));
+        pTop.add(pLeft);
+        pTop.add(pRight);
         // * Build View
-        mainPanel.add(pLeft);
-        mainPanel.add(pRight);
+        mainPanel.add(pTop);
+        mainPanel.add(pBottom);
     }
 
     @Override
