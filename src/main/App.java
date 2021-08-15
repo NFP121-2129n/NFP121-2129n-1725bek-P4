@@ -6,14 +6,14 @@ import java.awt.event.*;
 import java.io.*;
 
 import javax.swing.*;
+import java.io.*;
+import java.util.*;
 
+import views.*;
 import models.Classe;
 import models.Enseignant;
 import models.Matiere;
 import models.Salle;
-
-import java.util.*;
-import views.*;
 
 public class App implements ActionListener {
 
@@ -35,7 +35,7 @@ public class App implements ActionListener {
         frame = new JFrame("NFP121-2129n-1725bek-P4");
         frame.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - 300,
                 (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - 200);
-        frame.setPreferredSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(1000, 500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel();
         mBar = new JMenuBar();
