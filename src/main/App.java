@@ -215,8 +215,6 @@ public class App implements ActionListener {
             } catch (IOException | ClassNotFoundException ex) {
                 JOptionPane.showMessageDialog(null, "Chargement des horaires erronné");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Répertoire non-trouvée!");
         }
         panel.revalidate();
         panel.repaint();

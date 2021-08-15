@@ -37,7 +37,7 @@ public class MatiereView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(9, 1));
+        pLeft.setLayout(new GridLayout(8, 1));
         pInput1 = new JPanel();
         pInput1.add(labelCode);
         pInput1.add(tfCode);

@@ -59,7 +59,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(9, 1));
+        pLeft.setLayout(new GridLayout(8, 1));
         pInput2 = new JPanel();
         pInput2.add(labelQty);
         pInput2.add(tfCapacity);

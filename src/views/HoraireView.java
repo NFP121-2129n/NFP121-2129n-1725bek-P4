@@ -19,7 +19,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     public JPanel mainPanel;
     JPanel pTop, pBottom, pLeft, pRight, pInputCam, pInput1, pInput2, pInput3, pInput4, pInput5, pInput6;
     JLabel labelCam, labelCla, labelEns, labelSal, labelDay, labelTime;
-    JButton btnSubmit, btnRollback, btnSave;
+    JButton btnSubmit, btnRollback;
     JComboBox<Classe> cbCla;
     JComboBox<Enseignant> cbEns;
     JComboBox<Salle> cbSal;
@@ -103,11 +103,9 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         btnRollback = new JButton("Fuck, go back!");
         btnRollback.addActionListener(this);
-        btnSave = new JButton("Sauvegarder");
-        btnSave.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(9, 1));
+        pLeft.setLayout(new GridLayout(8, 1));
         pInputCam = new JPanel();
         pInputCam.add(labelCam);
         pInputCam.add(cbCam);
@@ -134,7 +132,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         pLeft.add(pInput5);
         pLeft.add(btnSubmit);
         pLeft.add(btnRollback);
-        pLeft.add(btnSave);
         // * Table
         pBottom = new JPanel();
         pBottom.setLayout(new GridBagLayout());
@@ -172,9 +169,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
         if (o == btnRollback) {
             rollback();
-        }
-        if (o == btnSave) {
-            System.out.println("Save horaire instance");
         }
     }
 
