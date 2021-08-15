@@ -1,6 +1,7 @@
 package models;
 
 public class Salle {
+
     private static int counter = 1;
     private int id;
     private String code;
@@ -14,10 +15,21 @@ public class Salle {
         this.capacite = capacite;
     }
 
-    // * Getters
-    public int getCapacite() {
-        return capacite;
+    // * Setters
+
+    public void setCode(String code) {
+        this.code = code;
     }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
+    }
+
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
+    }
+
+    // * Getters
 
     public int getId() {
         return id;
@@ -31,17 +43,8 @@ public class Salle {
         return campus;
     }
 
-    // * Setters
-    public void setCampus(String campus) {
-        this.campus = campus;
-    }
-
-    public void setCapacite(int capacite) {
-        this.capacite = capacite;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public int getCapacite() {
+        return capacite;
     }
 
     public String toString() {

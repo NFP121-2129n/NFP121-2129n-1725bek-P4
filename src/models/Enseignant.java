@@ -10,18 +10,20 @@ public class Enseignant {
         this.nom = nom;
     }
 
+    // * Setters
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     // * Getters
+
     public int getId() {
         return id;
     }
 
     public String getNom() {
         return nom;
-    }
-
-    // * Setters
-    public void setNom(String nom) {
-        this.nom = nom;
     }
 
     public String toString() {

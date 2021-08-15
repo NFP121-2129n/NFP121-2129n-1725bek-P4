@@ -97,6 +97,5 @@ public class MatiereView implements ActionListener, ListSelectionListener {
             btnSubmit.setText("Mettre à jour");
             tfCode.setText(list.getSelectedValue().getCode());
         }
-
     }
 }

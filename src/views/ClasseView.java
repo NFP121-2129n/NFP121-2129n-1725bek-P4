@@ -137,10 +137,11 @@ public class ClasseView implements ActionListener, ListSelectionListener {
             if (list.getSelectedValue() == null) {
                 btnSubmit.setText("Enregistrer");
                 cbCampus.setSelectedIndex(0);
-                if (cbMatiere.getItemCount() > 0)
+                if (cbMatiere.getItemCount() > 0) {
                     cbMatiere.setSelectedIndex(0);
-                else
+                } else {
                     cbMatiere.setSelectedIndex(-1);
+                }
                 tfCapacity.setText("");
                 return;
             }

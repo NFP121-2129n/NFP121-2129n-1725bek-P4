@@ -1,6 +1,7 @@
 package models;
 
 public class Horaire {
+
     private static int counter = 1;
     private int id;
     private String campus;
@@ -8,35 +9,39 @@ public class Horaire {
 
     public Horaire(String campus) {
         this.id = counter++;
-        this.setCampus(campus);
+        this.campus = campus;
         this.horaire = new ClasseCouple[4][5];
     }
 
-    public ClasseCouple[][] getHoraire() {
-        return horaire;
-    }
+    // * Setters
 
-    public void setTableCell(ClasseCouple cla, int row, int col) {
-        horaire[row][col] = cla;
-    }
-
-    public ClasseCouple getTableCell(int row, int col) {
-        return horaire[row][col];
+    public void setCampus(String campus) {
+        this.campus = campus;
     }
 
     public void setHoraire(ClasseCouple horaire[][]) {
         this.horaire = horaire;
     }
 
+    public void setTableCell(ClasseCouple cla, int row, int col) {
+        horaire[row][col] = cla;
+    }
+
+    // * Getters
+
+    public int getId() {
+        return id;
+    }
+
     public String getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
-        this.campus = campus;
+    public ClasseCouple[][] getHoraire() {
+        return horaire;
     }
 
-    public int getId() {
-        return id;
+    public ClasseCouple getTableCell(int row, int col) {
+        return horaire[row][col];
     }
 }

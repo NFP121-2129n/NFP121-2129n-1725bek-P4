@@ -10,20 +10,20 @@ public class Matiere {
         this.code = code;
     }
 
-    // * Getters
+    // * Setters
 
-    public String getCode() {
-        return code;
+    public void setCode(String code) {
+        this.code = code;
     }
+
+    // * Getters
 
     public int getId() {
         return id;
     }
 
-    // * Setters
-
-    public void setCode(String code) {
-        this.code = code;
+    public String getCode() {
+        return code;
     }
 
     public String toString() {

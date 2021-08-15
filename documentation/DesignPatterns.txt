@@ -1,0 +1,3 @@
+List of design patterns used in the app :
+
+ • Factory => ClasseNonCouple et ClasseCouple;

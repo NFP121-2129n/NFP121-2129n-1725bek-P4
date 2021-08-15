@@ -16,29 +16,11 @@ abstract public class Classe {
         setCode();
     }
 
-    // * Getters
-
-    public String getCampus() {
-        return campus;
-    }
-
-    public int getCapacite() {
-        return capacite;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Matiere getMatiere() {
-        return matiere;
-    }
-
     // * Setters
+
+    public void setCode() {
+        this.code = matiere.getCode() + "-" + campus;
+    }
 
     public void setCampus(String campus) {
         this.campus = campus;
@@ -48,12 +30,30 @@ abstract public class Classe {
         this.capacite = capacite;
     }
 
-    public void setCode() {
-        this.code = matiere.getCode() + "-" + campus;
-    }
-
     public void setMatiere(Matiere matiere) {
         this.matiere = matiere;
+    }
+
+    // * Getters
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getCampus() {
+        return campus;
+    }
+
+    public int getCapacite() {
+        return capacite;
+    }
+
+    public Matiere getMatiere() {
+        return matiere;
     }
 
     abstract public String toString();

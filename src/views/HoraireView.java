@@ -169,18 +169,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         }
     }
 
-    public void populateList() {
-        listModel.clear();
-        if (!App.listCla.isEmpty()) {
-            App.listCla.forEach((v) -> {
-                if (v instanceof ClasseCouple)
-                    listModel.addElement(v);
-            });
-        }
-        mainPanel.revalidate();
-        mainPanel.repaint();
-    }
-
     public void enregistrer() {
         if (cbCla.getSelectedItem() == null || cbEns.getSelectedItem() == null || cbSal.getSelectedItem() == null
                 || cbTime.getSelectedItem() == null) {
@@ -298,8 +286,21 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         mainPanel.repaint();
     }
 
+    public void populateList() {
+        listModel.clear();
+        if (!App.listCla.isEmpty()) {
+            App.listCla.forEach((v) -> {
+                if (v instanceof ClasseCouple) {
+                    listModel.addElement(v);
+                }
+            });
+        }
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
     @Override
     public void valueChanged(ListSelectionEvent e) {
-
+        // TODO edit horaire
     }
 }
