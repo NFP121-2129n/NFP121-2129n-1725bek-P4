@@ -237,8 +237,7 @@ public class App implements ActionListener {
             oos.writeObject(listEns);
             oos.close();
         } catch (IOException e) {
-            // JOptionPane.showMessageDialog(null, "Sauvegarde des enseignants erronnée!");
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Sauvegarde des enseignants erronnée!");
             return;
         }
         try {
