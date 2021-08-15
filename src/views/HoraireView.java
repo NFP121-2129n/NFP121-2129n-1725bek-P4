@@ -158,6 +158,19 @@ public class HoraireView implements ActionListener {
         mainPanel.add(pRight);
     }
 
+    public void checkCellAvailabilty(Classe cla, int rowID, int colID) {
+        if (tableModel.getValueAt(rowID, colID) != null) {
+            if (JOptionPane.showConfirmDialog(null,
+                    "Voulez-vous remplacer la classe " + (Classe) tableModel.getValueAt(rowID, colID)
+                            + " avec la classe " + cla + " ?",
+                    "Conflit dans la cellule!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                tableModel.setValueAt(cla, rowID, colID);
+            }
+        } else {
+            tableModel.setValueAt(cla, rowID, colID);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -177,7 +190,7 @@ public class HoraireView implements ActionListener {
             // * Set classe in horaire table
             int colID = days.indexOf(cla.getJour());
             int rowID = timeMap.indexOf(cla.getPeriode());
-            tableModel.setValueAt(cla, rowID, colID);
+            checkCellAvailabilty(cla, rowID, colID);
             table.setModel(tableModel);
             App.frame.revalidate();
             App.frame.repaint();
