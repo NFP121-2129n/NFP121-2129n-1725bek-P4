@@ -4,9 +4,7 @@ import java.awt.*;
 import java.util.List;
 import java.awt.event.*;
 import java.io.*;
-
 import javax.swing.*;
-import java.io.*;
 import java.util.*;
 
 import views.*;
@@ -18,7 +16,7 @@ public class App implements ActionListener {
     public static JPanel panel;
 
     JMenuBar mBar;
-    JMenuItem iEns, iCla, iSal, iMat, iHor, iSave, iLoad, iVer;
+    JMenuItem iEns, iCla, iSal, iMat, iHor, iSave, iVer;
 
     public static ArrayList<Enseignant> listEns = new ArrayList<Enseignant>();
     public static ArrayList<Classe> listCla = new ArrayList<Classe>();
@@ -51,8 +49,6 @@ public class App implements ActionListener {
         iHor.addActionListener(this);
         iSave = new JMenuItem("Sauvegarder");
         iSave.addActionListener(this);
-        iLoad = new JMenuItem("Charger");
-        iLoad.addActionListener(this);
         iVer = new JMenuItem("Version");
         iVer.addActionListener(this);
         mBar.add(iEns);
@@ -61,7 +57,6 @@ public class App implements ActionListener {
         mBar.add(iMat);
         mBar.add(iHor);
         mBar.add(iSave);
-        mBar.add(iLoad);
         mBar.add(iVer);
         frame.setJMenuBar(mBar);
         frame.pack();
@@ -80,6 +75,7 @@ public class App implements ActionListener {
             tempOriginator.setCampus(c);
             listOriginator.add(tempOriginator);
         });
+        loadData();
     }
 
     @Override
@@ -132,9 +128,6 @@ public class App implements ActionListener {
         }
         if (o == iSave) {
             saveData();
-        }
-        if (o == iLoad) {
-            loadData();
         }
         if (o == iVer) {
             JOptionPane.showMessageDialog(null, "Version 1.0.0");
@@ -225,6 +218,8 @@ public class App implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(null, "Répertoire non-trouvée!");
         }
+        panel.revalidate();
+        panel.repaint();
     }
 
     public void saveData() {
