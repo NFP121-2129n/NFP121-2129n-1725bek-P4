@@ -275,7 +275,7 @@ public class App implements ActionListener {
             return;
         }
         try {
-            File fileHor = new File(directory.getName() + "\\salles");
+            File fileHor = new File(directory.getName() + "\\horaires");
             fileHor.createNewFile();
             fos = new FileOutputStream(fileHor);
             oos = new ObjectOutputStream(fos);
