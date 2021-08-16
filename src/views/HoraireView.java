@@ -174,12 +174,28 @@ public class HoraireView implements ActionListener, ListSelectionListener {
 
     public void rollback() {
         // TODO rollback states
-        System.out.println(currentHoraire.getHoraire());
+        for (int i = 0; i < currentCaretaker.mementoStack.peek().getHoraire().getHoraire().length; i++) {
+            for (int j = 0; j < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i].length; j++) {
+                for (int j2 = 0; j2 < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i][j]
+                        .size(); j2++) {
+                    System.out.println(
+                            currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i][j].get(j2).toString());
+                }
+            }
+        }
         currentOriginator.getStateFromMemento(currentCaretaker.rollBack());
+        for (int i = 0; i < currentCaretaker.mementoStack.peek().getHoraire().getHoraire().length; i++) {
+            for (int j = 0; j < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i].length; j++) {
+                for (int j2 = 0; j2 < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i][j]
+                        .size(); j2++) {
+                    System.out.println(
+                            currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i][j].get(j2).toString());
+                }
+            }
+        }
         currentHoraire = currentOriginator.getHoraire();
-        System.out.println(currentHoraire.getHoraire());
-        // populateHoraireTable();
-        // populateList();
+        populateHoraireTable();
+        populateList();
     }
 
     public void enregistrer() {
@@ -205,10 +221,14 @@ public class HoraireView implements ActionListener, ListSelectionListener {
         checkCellAvailabilty(cla, rowID, colID);
         populateHoraireTable();
         populateList();
-        // TODO save states
-        currentOriginator.setHoraire(currentHoraire);
+
+        // TODO Fixing this issue by creating a temp horaire and adding it instead of
+        // the actual object
+        Horaire tempHoraire = new Horaire(currentHoraire.getCampus());
+        tempHoraire.setHoraire(currentHoraire.getHoraire());
+        currentOriginator.setHoraire(tempHoraire);
         currentCaretaker.add(currentOriginator.saveToMemento());
-        System.out.println(currentCaretaker.mementoStack.size());
+
     }
 
     public void checkCellAvailabilty(ClasseNonCouple cla, int rowID, int colID) {
@@ -277,8 +297,6 @@ public class HoraireView implements ActionListener, ListSelectionListener {
                 }
             }
         }
-        currentOriginator.setHoraire(currentHoraire);
-        currentCaretaker.add(currentOriginator.saveToMemento());
         table.setModel(tableModel);
         mainPanel.revalidate();
         mainPanel.repaint();
