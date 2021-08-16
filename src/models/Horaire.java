@@ -8,12 +8,18 @@ public class Horaire implements Serializable {
     private static int counter = 1;
     private int id;
     private String campus;
+    // * The actual horaire of the campus is stored in a two dimensional array of
+    // * arraylists. Basically the two dimensional array represents the JTable of 5
+    // * days and 4 time intervals. And each of these time intervals can contain one
+    // * or more Classes scheduled, hence the arraylist
     private ArrayList<ClasseCouple> horaire[][];
 
     @SuppressWarnings("unchecked")
     public Horaire(String campus) {
         this.id = counter++;
         this.campus = campus;
+        // * Creating the 4x5 template of the horaire table and populating it with empty
+        // * arraylists of Coupled Classes
         this.horaire = (ArrayList<ClasseCouple>[][]) new ArrayList[4][5];
         for (int i = 0; i < horaire.length; i++) {
             for (int j = 0; j < horaire[i].length; j++) {

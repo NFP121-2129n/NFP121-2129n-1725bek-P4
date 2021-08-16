@@ -37,7 +37,7 @@ public class MatiereView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(8, 1));
+        pLeft.setLayout(new GridLayout(7, 1));
         pInput1 = new JPanel();
         pInput1.add(labelCode);
         pInput1.add(tfCode);
@@ -68,14 +68,17 @@ public class MatiereView implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            // * Checking if the inputs are not empty
             if (tfCode.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette matière.");
                 return;
             }
             if (list.getSelectedValue() == null) {
+                // * Creating the new Matiere instance and saving it in its respective array
                 Matiere mat = new Matiere(tfCode.getText());
                 App.listMat.add(mat);
             } else {
+                // * Updating the instance's info if user is in edit mode
                 Matiere mat = list.getSelectedValue();
                 mat.setCode(tfCode.getText());
             }
@@ -89,6 +92,7 @@ public class MatiereView implements ActionListener, ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list) {
+            // * Populating inputs fields with selection's info and entering edit mode
             if (list.getSelectedValue() == null) {
                 btnSubmit.setText("Enregistrer");
                 tfCode.setText("");

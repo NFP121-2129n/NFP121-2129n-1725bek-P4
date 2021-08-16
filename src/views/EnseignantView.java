@@ -37,7 +37,7 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(8, 1));
+        pLeft.setLayout(new GridLayout(7, 1));
         pInput = new JPanel();
         pInput.add(labelNom);
         pInput.add(tfNom);
@@ -68,14 +68,17 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            // * Checking if the inputs are not empty
             if (tfNom.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Veuillez entrer le nom de cet enseignant.");
                 return;
             }
             if (list.getSelectedValue() == null) {
+                // * Creating the new Enseignant instance and saving it in its respective array
                 Enseignant ens = new Enseignant(tfNom.getText());
                 App.listEns.add(ens);
             } else {
+                // * Updating the instance's info if user is in edit mode
                 Enseignant ens = list.getSelectedValue();
                 ens.setNom(tfNom.getText());
             }
@@ -89,6 +92,7 @@ public class EnseignantView implements ActionListener, ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list) {
+            // * Populating inputs fields with selection's info and entering edit mode
             if (list.getSelectedValue() == null) {
                 btnSubmit.setText("Enregistrer");
                 tfNom.setText("");

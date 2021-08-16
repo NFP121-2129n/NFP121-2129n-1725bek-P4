@@ -23,8 +23,6 @@ public class App implements ActionListener {
     public static ArrayList<Matiere> listMat = new ArrayList<Matiere>();
     public static ArrayList<Salle> listSal = new ArrayList<Salle>();
     public static ArrayList<Horaire> listHor = new ArrayList<Horaire>();
-    public static ArrayList<Caretaker> listCaretaker = new ArrayList<Caretaker>();
-    public static ArrayList<Originator> listOriginator = new ArrayList<Originator>();
     public static ArrayList<String> listCampus;
 
     String currentPanel = "";
@@ -62,30 +60,27 @@ public class App implements ActionListener {
         frame.pack();
         frame.setResizable(false);
         frame.setVisible(true);
-        // * Campus Array
+        // * Populating the Campus array
         listCampus = new ArrayList<String>(
                 List.of("Bikfaya", "Beyrouth", "Nahr Ibrahim", "Tripoli", "Bekaa", "Chtoura", "Baakline"));
         Collections.sort(listCampus);
         listCampus.forEach((c) -> {
             listHor.add(new Horaire(c));
-            Caretaker tempCaretaker = new Caretaker();
-            tempCaretaker.setCampus(c);
-            listCaretaker.add(tempCaretaker);
-            Originator tempOriginator = new Originator();
-            tempOriginator.setCampus(c);
-            listOriginator.add(tempOriginator);
         });
+        // * Loading the saved data immediately on run
         loadData();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // * Forbid the user to call the same panel twice
         if (e.getActionCommand().toString().equals(currentPanel)) {
             JOptionPane.showMessageDialog(null, "Vous êtes deja dans la section \"" + currentPanel + "\"");
             return;
         }
         Object o = e.getSource();
         currentPanel = e.getActionCommand().toString();
+        // * Create Enseignant panel
         if (o == iEns) {
             if (panel.isShowing()) {
                 frame.remove(panel);
@@ -94,6 +89,7 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        // * Create Classe panel
         if (o == iCla) {
             if (panel.isShowing()) {
                 frame.remove(panel);
@@ -102,6 +98,7 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        // * Create Salle panel
         if (o == iSal) {
             if (panel.isShowing()) {
                 frame.remove(panel);
@@ -110,6 +107,7 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        // * Create Matière panel
         if (o == iMat) {
             if (panel.isShowing()) {
                 frame.remove(panel);
@@ -118,6 +116,7 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        // * Create Horaire panel
         if (o == iHor) {
             if (panel.isShowing()) {
                 frame.remove(panel);
@@ -126,14 +125,17 @@ public class App implements ActionListener {
             frame.setContentPane(panel);
             frame.pack();
         }
+        // * Save data into files
         if (o == iSave) {
             saveData();
         }
+        // * Check app version
         if (o == iVer) {
             JOptionPane.showMessageDialog(null, "Version 1.0.0");
         }
     }
 
+    // * Function that loads data from files and saves them in the object arrays
     @SuppressWarnings("unchecked")
     public void loadData() {
         File directory = new File("data");
@@ -220,6 +222,7 @@ public class App implements ActionListener {
         panel.repaint();
     }
 
+    // * Reads data from the object arrays and saves it into files
     public void saveData() {
         File directory = new File("data");
         if (!directory.exists()) {
@@ -285,6 +288,7 @@ public class App implements ActionListener {
         JOptionPane.showMessageDialog(null, "Sauvegarde réussie.");
     }
 
+    // * Run the app
     public static void main(String[] args) {
         new App();
     }

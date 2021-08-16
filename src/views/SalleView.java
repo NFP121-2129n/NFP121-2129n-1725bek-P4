@@ -48,7 +48,7 @@ public class SalleView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(8, 1));
+        pLeft.setLayout(new GridLayout(7, 1));
         pInput1 = new JPanel();
         pInput1.add(labelCode);
         pInput1.add(tfCode);
@@ -87,6 +87,7 @@ public class SalleView implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            // * Checking if the inputs are not empty
             if (tfCode.getText().isEmpty() || tfCapacity.getText().isEmpty()) {
                 if (!tfCapacity.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
@@ -97,6 +98,7 @@ public class SalleView implements ActionListener, ListSelectionListener {
                 }
                 return;
             }
+            // * Validating capacity is Integer
             try {
                 Integer.parseInt(tfCapacity.getText());
             } catch (Exception exc) {
@@ -104,10 +106,12 @@ public class SalleView implements ActionListener, ListSelectionListener {
                 return;
             }
             if (list.getSelectedValue() == null) {
+                // * Creating the new Salle instance and saving it in its respective array
                 Salle sal = new Salle(tfCode.getText(), (String) cbCampus.getSelectedItem(),
                         Integer.parseInt(tfCapacity.getText()));
                 App.listSal.add(sal);
             } else {
+                // * Updating the instance's info if user is in edit mode
                 Salle sal = list.getSelectedValue();
                 sal.setCampus((String) cbCampus.getSelectedItem());
                 sal.setCode(tfCode.getText());
@@ -123,6 +127,7 @@ public class SalleView implements ActionListener, ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list) {
+            // * Populating inputs fields with selection's info and entering edit mode
             if (list.getSelectedValue() == null) {
                 btnSubmit.setText("Enregistrer");
                 tfCapacity.setText("");

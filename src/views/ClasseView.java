@@ -59,7 +59,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
         btnSubmit.addActionListener(this);
         // * Form
         pLeft = new JPanel();
-        pLeft.setLayout(new GridLayout(8, 1));
+        pLeft.setLayout(new GridLayout(7, 1));
         pInput2 = new JPanel();
         pInput2.add(labelQty);
         pInput2.add(tfCapacity);
@@ -100,6 +100,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSubmit) {
+            // * Checking if the inputs are not empty
             if (cbMatiere.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(null, "Veuillez choisir une matiere pour enregistrer cette classe.");
                 return;
@@ -108,6 +109,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
                 JOptionPane.showMessageDialog(null, "Veuillez entrer le code de cette classe.");
                 return;
             }
+            // * Validating capacity is Integer
             try {
                 Integer.parseInt(tfCapacity.getText());
             } catch (Exception exc) {
@@ -115,10 +117,12 @@ public class ClasseView implements ActionListener, ListSelectionListener {
                 return;
             }
             if (list.getSelectedValue() == null) {
+                // * Creating the new Classe instance and saving it in its respective array
                 Classe cla = classeFactory.createClasse(Integer.parseInt(tfCapacity.getText()),
                         (Matiere) cbMatiere.getSelectedItem(), (String) cbCampus.getSelectedItem());
                 App.listCla.add(cla);
             } else {
+                // * Updating the instance's info if user is in edit mode
                 Classe cla = list.getSelectedValue();
                 cla.setCampus((String) cbCampus.getSelectedItem());
                 cla.setMatiere((Matiere) cbMatiere.getSelectedItem());
@@ -135,6 +139,7 @@ public class ClasseView implements ActionListener, ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getSource() == list) {
+            // * Populating inputs fields with selection's info and entering edit mode
             if (list.getSelectedValue() == null) {
                 btnSubmit.setText("Enregistrer");
                 cbCampus.setSelectedIndex(0);
