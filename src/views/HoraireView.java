@@ -173,7 +173,7 @@ public class HoraireView implements ActionListener, ListSelectionListener {
     }
 
     public void rollback() {
-        // TODO rollback states
+        // TODO rollback states // check this way if the horaire is working
         for (int i = 0; i < currentCaretaker.mementoStack.peek().getHoraire().getHoraire().length; i++) {
             for (int j = 0; j < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i].length; j++) {
                 for (int j2 = 0; j2 < currentCaretaker.mementoStack.peek().getHoraire().getHoraire()[i][j]
