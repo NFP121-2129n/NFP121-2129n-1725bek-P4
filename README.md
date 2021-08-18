@@ -1,9 +1,9 @@
 # NFP121: Final Project (documentation)
 
 
-> Instructors: Dr. Chadi Kallab & Dr. Adel Awad
-> Executed by: Marc Fadi BITAR (1725bek) & Georges Pierre Ghafary (2129n)
-> Project ID: NFP121-2129n-1725bek-P4
+> Instructors: Dr. Chadi Kallab & Dr. Adel Awad.
+> Executed by: Marc Fadi BITAR (1725bek) & Georges Pierre Ghafary (2129n).
+> Project ID: NFP121-2129n-1725bek-P4.
 
 
 ### Project Aim
