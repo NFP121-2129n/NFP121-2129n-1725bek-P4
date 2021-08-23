@@ -194,7 +194,7 @@ public class HoraireView implements ActionListener {
             return;
         }
         // * if cell is not empty for current campus enter to check for conditions else
-        // automatically add class to horaire
+        // * automatically add class to horaire
         if (tableModel.getValueAt(rowID, colID) != null && !((String) tableModel.getValueAt(rowID, colID)).isEmpty()) {
             for (Horaire hor : App.listHor) {
                 // * check if salle is already being used on selected date
@@ -219,12 +219,12 @@ public class HoraireView implements ActionListener {
     // * check if enseignant is available to give class on selected date
     public boolean isEnseignantAvailable(int rowID, int colID) {
         Enseignant tempEns = (Enseignant) cbEns.getSelectedItem();
-        // * loop through horaires of all
+        // * loop through horaires of all campuses
         for (Horaire hor : App.listHor) {
             ArrayList<ClasseCouple>[][] tempHor = hor.getHoraire();
             for (int i = 0; i < tempHor[rowID][colID].size(); i++) {
                 // * if selected teacher has a class in any of the campuses on said date ( day
-                // and time) return false
+                // * and time) return false
                 if (tempHor[rowID][colID].get(i).getEnseignant().getId() == tempEns.getId()) {
                     return false;
                 }
